@@ -6,7 +6,7 @@ import { DEFAULT_AVATAR, SALT_ROUNDS } from './user.constant';
 
 export class UserEntity implements ExtendUser, Entity<string> {
   public id?: string;
-  public username: string;
+  public fullName: string;
   public email: string;
   public password: string;
   public createdDate: Date;
@@ -21,7 +21,7 @@ export class UserEntity implements ExtendUser, Entity<string> {
   public toObject() {
     return {
       id: this.id,
-      username: this.username,
+      fullName: this.fullName,
       email: this.email,
       password: this.password,
       createdDate: this.createdDate,
@@ -32,7 +32,7 @@ export class UserEntity implements ExtendUser, Entity<string> {
   }
 
   public populate(user: ExtendUser) {
-    this.username = user.username;
+    this.fullName = user.fullName;
     this.email = user.email;
     this.createdDate = user.createdDate;
     this.avatar = user.avatar || DEFAULT_AVATAR

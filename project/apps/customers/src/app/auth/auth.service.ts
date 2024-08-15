@@ -17,13 +17,13 @@ export class AuthService {
 
   public async registerUser(dto: CreateUserDto): Promise<UserEntity> {
     const user = {
-      username: dto.username,
+      fullName: dto.fullName,
       email: dto.email,
       password: '',
       createdDate: dayjs().toDate(),
       avatar: dto.avatar
     }
-    const existUser = this.userRepository.findByEmail(dto.email);
+    const existUser = await this.userRepository.findByEmail(dto.email);
 
     if(existUser) {
       throw new ConflictException(createMessage(ErrorMessage.USER_EXISTS_MESSAGE, [dto.email]));
@@ -37,7 +37,7 @@ export class AuthService {
     const existUser = await this.userRepository.findByEmail(dto.email);
 
     if(!existUser) {
-      throw new ConflictException(createMessage(ErrorMessage.NOT_FOUND_MESSAGE, [dto.email]));
+      throw new ConflictException(createMessage(ErrorMessage.NOT_FOUND_BY_EMAIL_MESSAGE, [dto.email]));
     }
     const isMatch = await existUser.comparePassword(dto.password);
 
@@ -49,6 +49,12 @@ export class AuthService {
   }
 
   public async getUser(id: string): Promise<UserEntity> {
-    return this.userRepository.findById(id);
+    const existUser = await this.userRepository.findById(id);
+
+    if(!existUser) {
+      throw new ConflictException(createMessage(ErrorMessage.NOT_FOUND_BY_ID_MESSAGE, [id]));
+    }
+
+    return existUser;
   }
 }
