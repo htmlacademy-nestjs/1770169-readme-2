@@ -6,10 +6,10 @@ import { ErrorMessage } from './repository.constant';
 import { createMessage } from '@project/lib/shared/helpers';
 
 export abstract class BaseMemoryRepository<T extends Entity<EntityId>> implements Repository<T> {
-  private readonly entities: Map<T['id'], T> = new Map();
+  private readonly _entities: Map<T['id'], T> = new Map();
 
-  public get() {
-    return this.entities;
+  public get entities() {
+    return this._entities;
   }
 
   public async findById(id: T['id']): Promise<T | null> {

@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 
 import { UserRepository } from '../user/user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { createMessage } from '@project/lib/shared/helpers';
 import { ErrorMessage } from './auth.constant';
 import { UserEntity } from '../user/user.entity';
@@ -32,7 +33,7 @@ export class AuthService {
     return this.userRepository.save(userEntity);
   }
 
-  public async verifyUser(dto: CreateUserDto): Promise<UserEntity> {
+  public async verifyUser(dto: LoginUserDto): Promise<UserEntity> {
     const existUser = await this.userRepository.findByEmail(dto.email);
 
     if(!existUser) {

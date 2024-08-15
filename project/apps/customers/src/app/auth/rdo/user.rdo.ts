@@ -11,11 +11,14 @@ export class UserRdo {
   public email: string
 
   @Expose()
-  public password: string;
-
-  @Expose()
   public createdDate: string;
 
   @Expose()
-  public avatar?: string;
+  public avatar: string;
+
+  @Expose()
+  public postCount: number;
+
+  @Expose()
+  public subscribeCount: number;
 }

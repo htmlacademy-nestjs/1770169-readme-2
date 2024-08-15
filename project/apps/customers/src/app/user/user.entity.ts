@@ -2,15 +2,17 @@ import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
 import { ExtendUser } from '@project/lib/shared/app/types';
 import { Entity } from '@project/lib/core';
-import { SALT_ROUNDS } from './user.constant';
+import { DEFAULT_AVATAR, SALT_ROUNDS } from './user.constant';
 
 export class UserEntity implements ExtendUser, Entity<string> {
-  public id: string;
+  public id?: string;
   public username: string;
   public email: string;
   public password: string;
-  public createdDate?: Date;
-  public avatar?: string;
+  public createdDate: Date;
+  public avatar: string;
+  public postCount: number;
+  public subscribeCount: number;
 
   constructor(user: ExtendUser) {
     this.populate(user);
@@ -22,6 +24,10 @@ export class UserEntity implements ExtendUser, Entity<string> {
       username: this.username,
       email: this.email,
       password: this.password,
+      createdDate: this.createdDate,
+      avatar: this.avatar,
+      postCount: this.postCount,
+      subscribeCount: this.subscribeCount
     }
   }
 
@@ -29,6 +35,7 @@ export class UserEntity implements ExtendUser, Entity<string> {
     this.username = user.username;
     this.email = user.email;
     this.createdDate = user.createdDate;
+    this.avatar = user.avatar || DEFAULT_AVATAR
   }
 
   public setPassword(password: string) {
