@@ -1,0 +1,23 @@
+POST http://localhost:5000/api/v1/user/sign-up HTTP/1.1
+Content-Type: application/json
+
+{
+  "fullName": "Глуханько Антон",
+  "email": "user@mail.ru",
+  "password": "123456"
+}
+
+###
+
+POST http://localhost:5000/api/v1/user/sign-in HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@mail.ru",
+  "password": "123456"
+}
+
+###
+
+GET http://localhost:5000/api/v1/user/66c3151ba81b7778afea6808 HTTP/1.1
+Content-Type: application/json
