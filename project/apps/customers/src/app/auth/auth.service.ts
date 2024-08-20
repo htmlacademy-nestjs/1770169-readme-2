@@ -27,7 +27,7 @@ export class AuthService {
       throw new ConflictException(createMessage(ErrorMessage.USER_EXISTS_MESSAGE, [dto.email]));
     }
     const userEntity = await new UserEntity(user).setPassword(dto.password);
-
+    console.log(userEntity)
     return this.userRepository.save(userEntity);
   }
 

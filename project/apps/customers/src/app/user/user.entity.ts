@@ -29,9 +29,7 @@ export class UserEntity implements ExtendUser, Entity<string> {
       email: this.email,
       password: this.password,
       createdDate: this.createdDate,
-      avatar: this.avatar,
-      postCount: this.postCount,
-      subscribeCount: this.subscribeCount
+      avatar: this.avatar
     }
   }
 
@@ -42,6 +40,7 @@ export class UserEntity implements ExtendUser, Entity<string> {
   public populate(user: ExtendUser) {
     this.fullName = user.fullName;
     this.email = user.email;
+    this.password = user.password
     this.createdDate = dayjs().toDate();
     this.avatar = user.avatar || DEFAULT_AVATAR
   }

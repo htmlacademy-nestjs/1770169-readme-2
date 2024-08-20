@@ -33,6 +33,7 @@ export class AuthController {
   @Post('sign-up')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.registerUser(dto);
+
     return fillDto(NewUserRdo, newUser.toObject());
   }
 
@@ -52,6 +53,7 @@ export class AuthController {
   @HttpCode(200)
   public async login(@Body() dto: LoginUserDto) {
     const verifiedUser = await this.authService.verifyUser(dto);
+
     return fillDto(LoggedUserRdo, verifiedUser.toObject());
   }
 
