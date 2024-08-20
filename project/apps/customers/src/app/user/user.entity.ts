@@ -1,7 +1,5 @@
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
-import dayjs from 'dayjs';
-
 import { ExtendUser } from '@project/lib/shared/app/types';
 
 import { Entity } from '@project/lib/core';
@@ -13,7 +11,7 @@ export class UserEntity implements ExtendUser, Entity<string> {
   public fullName: string;
   public email: string;
   public password: string;
-  public createdDate?: Date;
+  public createdAt?: Date;
   public avatar: string;
   public postCount: number;
   public subscribeCount: number;
@@ -28,8 +26,8 @@ export class UserEntity implements ExtendUser, Entity<string> {
       fullName: this.fullName,
       email: this.email,
       password: this.password,
-      createdDate: this.createdDate,
-      avatar: this.avatar
+      avatar: this.avatar,
+      createdAt: this.createdAt
     }
   }
 
@@ -40,14 +38,15 @@ export class UserEntity implements ExtendUser, Entity<string> {
   public populate(user: ExtendUser) {
     this.fullName = user.fullName;
     this.email = user.email;
-    this.password = user.password
-    this.createdDate = dayjs().toDate();
-    this.avatar = user.avatar || DEFAULT_AVATAR
+    this.password = user.password;
+    this.avatar = user.avatar || DEFAULT_AVATAR;
+    this.createdAt = user.createdAt;
   }
 
   public async setPassword(password: string) {
     const salt = genSaltSync(SALT_ROUNDS);
     this.password = hashSync(password, salt);
+
     return this;
   }
 

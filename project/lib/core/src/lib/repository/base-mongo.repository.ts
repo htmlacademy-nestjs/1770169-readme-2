@@ -2,12 +2,14 @@ import {Document, Model} from 'mongoose';
 
 import { NotFoundException } from '@nestjs/common';
 
+import { Timestamps } from '@project/lib/shared/app/types';
+
 import { Entity, EntityId } from './entity.interface';
 import { Repository } from './repository.interface';
 
 export abstract class BaseMongoRepository<
     EntityType extends Entity<EntityId>,
-    DocumentType extends Document
+    DocumentType extends Document & Timestamps
   > implements Repository<EntityType> {
     constructor(
       protected readonly model: Model<DocumentType>,
@@ -32,6 +34,7 @@ export abstract class BaseMongoRepository<
     const newEntity = new this.model(entity.toObject());
     await newEntity.save();
     entity.id = newEntity._id.toString();
+    entity.createdAt = newEntity.createdAt;
 
     return entity;
   }

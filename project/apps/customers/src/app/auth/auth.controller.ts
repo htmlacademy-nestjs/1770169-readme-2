@@ -69,6 +69,7 @@ export class AuthController {
   @HttpCode(200)
   public async show(@Param('id') id: string) {
     const user = await this.authService.getUser(id);
+
     return fillDto(UserRdo, user.toObject());
   }
 }
