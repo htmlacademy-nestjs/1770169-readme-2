@@ -1,8 +1,8 @@
 version: '3.9'
 services:
-  db:
+  mongo:
     image: mongo:7.0
-    container_name: readme_db
+    container_name: readme_mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USERNAME}
@@ -17,7 +17,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-  db_ui:
+  mongo_ui:
     image: mongo-express:latest
     container_name: readme_mongo-express
     restart: always
