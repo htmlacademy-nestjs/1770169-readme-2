@@ -4,6 +4,19 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+enum Type {
+  VIDEO
+  TEXT
+  QUOTE
+  PHOTO
+  LINK
+}
+
+enum Status {
+  PUBLISHED
+  DRAFT
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +24,131 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Publication {
+  publicationId         String    @id @default(uuid()) @map("publication_id")
+  type                  Type
+  status                Status    @default(PUBLISHED)
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @default(now()) @updatedAt @map("updated_at")
+  repost                Boolean   @default(false)
+  userId                String    @map("user_id") @db.Char(24)
+  originalUserId        String?   @map("original_user_id") @db.Char(24)
+  originalPublicationId String?   @map("original_publication_id") @db.Char(36)
+  link                  Link?     @relation(fields: [linkId], references: [linkId], onDelete: Cascade, onUpdate: Cascade)
+  linkId                String?   @unique @map("link_id") @db.Char(36)
+  photo                 Photo?    @relation(fields: [photoId], references: [photoId], onDelete: Cascade, onUpdate: Cascade)
+  photoId               String?   @unique @map("photo_id") @db.Char(36)
+  quote                 Quote?    @relation(fields: [quoteId], references: [quoteId], onDelete: Cascade, onUpdate: Cascade)
+  quoteId               String?   @unique @map("quote_id") @db.Char(36)
+  text                  Text?     @relation(fields: [textId], references: [textId], onDelete: Cascade, onUpdate: Cascade)
+  textId                String?   @unique @map("text_id") @db.Char(36)
+  video                 Video?    @relation(fields: [videoId], references: [videoId], onDelete: Cascade, onUpdate: Cascade)
+  videoId               String?   @unique @map("teg_id") @db.Char(36)
+  like                  Like[]
+  comment               Comment[]
+
+  @@map("publications")
+}
+
+model Link {
+  linkId      String        @id @default(uuid()) @map("link_id")
+  url         String
+  description String        @db.VarChar(300)
+  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
+  tegId       String?       @map("teg_id") @db.Char(36)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  Publication Publication?
+
+  @@map("links")
+}
+
+model Photo {
+  photoId     String        @id @default(uuid()) @map("photo_id")
+  image       String        @db.VarChar(125)
+  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
+  tegId       String?       @map("teg_id") @db.Char(36)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  Publication Publication?
+
+  @@map("photos")
+}
+
+model Quote {
+  quoteId     String        @id @default(uuid()) @map("quote_id")
+  author      String        @db.VarChar(50)
+  content     String        @db.VarChar(300)
+  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
+  tegId       String?       @map("teg_id") @db.Char(36)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  Publication Publication?
+
+  @@map("quotes")
+}
+
+model Text {
+  textId      String        @id @default(uuid()) @map("text_id")
+  title       String        @db.VarChar(50)
+  preview     String        @db.VarChar(255)
+  content     String        @db.VarChar(1024)
+  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
+  tegId       String?       @map("teg_id") @db.Char(36)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  Publication Publication?
+
+  @@map("texts")
+}
+
+model Video {
+  videoId     String        @id @default(uuid()) @map("video_id")
+  title       String        @db.VarChar(50)
+  url         String
+  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
+  tegId       String?       @map("teg_id") @db.Char(36)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  Publication Publication?
+
+  @@map("videos")
+}
+
+model Teg {
+  tegId     String   @id @default(uuid()) @map("teg_id")
+  teg       String   @db.VarChar(80)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  video     Video[]
+  text      Text[]
+  link      Link[]
+  photo     Photo[]
+  quote     Quote[]
+
+  @@map("tegs")
+}
+
+model Like {
+  likeId        String      @id @default(uuid()) @map("like_id")
+  publication   Publication @relation(fields: [publicationId], references: [publicationId])
+  publicationId String      @map("publication_id") @db.Char(36)
+  userId        String      @map("user_id") @db.Char(24)
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  @@map("likes")
+}
+
+model Comment {
+  commentId     String      @id @default(uuid()) @map("comment_id")
+  content       String      @db.VarChar(300)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  publication   Publication @relation(fields: [publicationId], references: [publicationId])
+  publicationId String      @map("publication_id") @db.Char(36)
+  userId        String      @map("user_id") @db.Char(24)
+
+  @@map("comments")
 }
