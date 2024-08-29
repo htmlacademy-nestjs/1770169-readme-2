@@ -11,7 +11,7 @@ services:
     ports:
       - ${MONGO_DB_PORT}:27017
     volumes:
-      - readme_data:/data/db
+      - mongo_data:/data/db
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh ${MONGO_DB_HOST}:${MONGO_DB_PORT}/${MONGO_DB_NAME} --quiet
       interval: 10s
@@ -31,4 +31,4 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://${MONGO_DB_USERNAME}:${MONGO_DB_USER_PASSWORD}@db:${MONGO_DB_PORT}/
 
 volumes:
-  readme_data:
+  mongo_data:
