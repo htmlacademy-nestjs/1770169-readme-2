@@ -45,7 +45,7 @@ model Publication {
   text                  Text?     @relation(fields: [textId], references: [textId], onDelete: Cascade, onUpdate: Cascade)
   textId                String?   @unique @map("text_id") @db.Char(36)
   video                 Video?    @relation(fields: [videoId], references: [videoId], onDelete: Cascade, onUpdate: Cascade)
-  videoId               String?   @unique @map("teg_id") @db.Char(36)
+  videoId               String?   @unique @map("video_id") @db.Char(36)
   like                  Like[]
   comment               Comment[]
 
@@ -56,8 +56,8 @@ model Link {
   linkId      String        @id @default(uuid()) @map("link_id")
   url         String
   description String        @db.VarChar(300)
-  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
-  tegId       String?       @map("teg_id") @db.Char(36)
+  tag         Tag?          @relation(fields: [tagId], references: [tagId], onDelete: Cascade, onUpdate: Cascade)
+  tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   Publication Publication?
@@ -68,8 +68,8 @@ model Link {
 model Photo {
   photoId     String        @id @default(uuid()) @map("photo_id")
   image       String        @db.VarChar(125)
-  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
-  tegId       String?       @map("teg_id") @db.Char(36)
+  tag         Tag?          @relation(fields: [tagId], references: [tagId], onDelete: Cascade, onUpdate: Cascade)
+  tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   Publication Publication?
@@ -81,8 +81,8 @@ model Quote {
   quoteId     String        @id @default(uuid()) @map("quote_id")
   author      String        @db.VarChar(50)
   content     String        @db.VarChar(300)
-  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
-  tegId       String?       @map("teg_id") @db.Char(36)
+  tag         Tag?          @relation(fields: [tagId], references: [tagId], onDelete: Cascade, onUpdate: Cascade)
+  tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   Publication Publication?
@@ -95,8 +95,8 @@ model Text {
   title       String        @db.VarChar(50)
   preview     String        @db.VarChar(255)
   content     String        @db.VarChar(1024)
-  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
-  tegId       String?       @map("teg_id") @db.Char(36)
+  tag         Tag?          @relation(fields: [tagId], references: [tagId], onDelete: Cascade, onUpdate: Cascade)
+  tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   Publication Publication?
@@ -108,8 +108,8 @@ model Video {
   videoId     String        @id @default(uuid()) @map("video_id")
   title       String        @db.VarChar(50)
   url         String
-  teg         Teg?          @relation(fields: [tegId], references: [tegId], onDelete: Cascade, onUpdate: Cascade)
-  tegId       String?       @map("teg_id") @db.Char(36)
+  tag         Tag?          @relation(fields: [tagId], references: [tagId], onDelete: Cascade, onUpdate: Cascade)
+  tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
   Publication Publication?
@@ -117,9 +117,9 @@ model Video {
   @@map("videos")
 }
 
-model Teg {
-  tegId     String   @id @default(uuid()) @map("teg_id")
-  teg       String   @db.VarChar(80)
+model Tag {
+  tagId     String   @id @default(uuid()) @map("tag_id")
+  tag       String   @db.VarChar(80)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   video     Video[]
@@ -128,7 +128,7 @@ model Teg {
   photo     Photo[]
   quote     Quote[]
 
-  @@map("tegs")
+  @@map("tags")
 }
 
 model Like {
