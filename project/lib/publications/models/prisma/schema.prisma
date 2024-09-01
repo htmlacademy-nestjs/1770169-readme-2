@@ -19,6 +19,7 @@ enum Status {
 
 generator client {
   provider = "prisma-client-js"
+  output = "../../../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -37,15 +38,15 @@ model Publication {
   originalUserId        String?   @map("original_user_id") @db.Char(24)
   originalPublicationId String?   @map("original_publication_id") @db.Char(36)
   link                  Link?     @relation(fields: [linkId], references: [linkId], onDelete: Cascade, onUpdate: Cascade)
-  linkId                String?   @unique @map("link_id") @db.Char(36)
+  linkId                String?   @map("link_id") @db.Char(36)
   photo                 Photo?    @relation(fields: [photoId], references: [photoId], onDelete: Cascade, onUpdate: Cascade)
-  photoId               String?   @unique @map("photo_id") @db.Char(36)
+  photoId               String?   @map("photo_id") @db.Char(36)
   quote                 Quote?    @relation(fields: [quoteId], references: [quoteId], onDelete: Cascade, onUpdate: Cascade)
-  quoteId               String?   @unique @map("quote_id") @db.Char(36)
+  quoteId               String?   @map("quote_id") @db.Char(36)
   text                  Text?     @relation(fields: [textId], references: [textId], onDelete: Cascade, onUpdate: Cascade)
-  textId                String?   @unique @map("text_id") @db.Char(36)
+  textId                String?   @map("text_id") @db.Char(36)
   video                 Video?    @relation(fields: [videoId], references: [videoId], onDelete: Cascade, onUpdate: Cascade)
-  videoId               String?   @unique @map("video_id") @db.Char(36)
+  videoId               String?   @map("video_id") @db.Char(36)
   like                  Like[]
   comment               Comment[]
 
@@ -60,7 +61,7 @@ model Link {
   tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
-  Publication Publication?
+  Publication Publication[]
 
   @@map("links")
 }
@@ -72,7 +73,7 @@ model Photo {
   tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
-  Publication Publication?
+  Publication Publication[]
 
   @@map("photos")
 }
@@ -85,7 +86,7 @@ model Quote {
   tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
-  Publication Publication?
+  Publication Publication[]
 
   @@map("quotes")
 }
@@ -99,7 +100,7 @@ model Text {
   tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
-  Publication Publication?
+  Publication Publication[]
 
   @@map("texts")
 }
@@ -112,7 +113,7 @@ model Video {
   tagId       String?       @map("tag_id") @db.Char(36)
   createdAt   DateTime      @default(now()) @map("created_at")
   updatedAt   DateTime      @updatedAt @map("updated_at")
-  Publication Publication?
+  Publication Publication[]
 
   @@map("videos")
 }

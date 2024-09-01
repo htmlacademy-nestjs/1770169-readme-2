@@ -32,7 +32,7 @@
     "db:generate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx prisma generate --schema ./schema.prisma",
+        "command": "npx prisma generate --schema ./schema.prisma --watch",
         "cwd": "lib/publications/models/prisma"
       }
     },
