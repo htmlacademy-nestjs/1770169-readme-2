@@ -9,9 +9,6 @@ export class CommentsEntity implements Comment, Entity<string> {
   public createdAt?: Date;
 
   constructor(comment: Comment) {
-    if (!comment.content) {
-      throw new Error('Comment content is required');
-    }
     this.populate(comment);
   }
 
