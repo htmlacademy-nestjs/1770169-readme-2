@@ -17,27 +17,27 @@ function getTags() {
   return [
     {
       tagId: uuids.get('tag0'),
-      tag: '#походвгоры#заповедник#вода#горы#облака'
+      tags: ['#походвгоры', '#заповедник', '#вода', '#горы', '#облака', '#бурабай']
     },
     {
       tagId: uuids.get('tag1'),
-      tag: '#живопись#творчество#пейзаж#лес'
+      tags: ['#живопись','#творчество', '#пейзаж', '#лес']
     },
     {
       tagId: uuids.get('tag2'),
-      tag: '#кот#кошки#кошка#длядетей#котята'
+      tags: ['#кот', '#кошки', '#кошка', '#длядетей', '#котята']
     },
     {
       tagId: uuids.get('tag3'),
-      tag: '#библиотека#книги#кошка#рамкафото#перо#чернила#фэнтези#кубок'
+      tags: ['#библиотека', '#книги', '#кошка', '#рамкафото', '#перо', '#чернила', '#фэнтези', '#кубок']
     },
     {
       tagId: uuids.get('tag4'),
-      tag: '#город#восход#Япония#Токио'
+      tags: ['#город', '#восход', '#Япония', '#Токио']
     },
     {
       tagId: uuids.get('tag5'),
-      tag: '#природа#туман#небо'
+      tags: ['#природа', '#алтай', '#небо', '#заповедник', '#горы']
     }
   ]
 }
@@ -145,20 +145,20 @@ function getVideos() {
   return [
     {
       videoId: uuids.get('video0'),
-      title: 'Полет над озером',
-      url: 'https://dareful.com/flying-over-water/',
+      title: 'Бурабай Казахстан',
+      url: 'https://www.youtube.com/watch?v=xBInF48M0F0',
       tagId: uuids.get('tag0'),
     },
     {
       videoId: uuids.get('video1'),
       title: 'Восход солнца в Токио',
-      url: 'https://dareful.com/free-4k-time-lapse-stock-video-tokyo-japan-sunrise/',
+      url: 'https://www.youtube.com/watch?v=6Nlfqu_63Mk',
       tagId: uuids.get('tag4'),
     },
     {
       videoId: uuids.get('video2'),
-      title: 'Туманный горный пейзаж',
-      url: 'https://dareful.com/foggy-mountain-landscape/',
+      title: 'Горный Алтай',
+      url: 'https://www.youtube.com/watch?v=DZdUS9cDovQ',
       tagId: uuids.get('tag5'),
     }
   ]
@@ -276,7 +276,7 @@ async function seedDb(prismaClient: PrismaClient) {
     await prismaClient.tag.create({
       data: {
         tagId: tag.tagId,
-        tag: tag.tag
+        tags: tag.tags
       }
     })
   }

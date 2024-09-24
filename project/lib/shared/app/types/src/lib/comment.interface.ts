@@ -1,8 +1,7 @@
-import { User } from './user.interface';
-
 export interface Comment {
   id?: string;
   content: string;
-  user: User;
+  userId: string;
+  publicationId: string;
   createdAt?: Date;
 }

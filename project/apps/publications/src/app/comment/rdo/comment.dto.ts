@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { Expose, Type } from 'class-transformer';
-
-import { UserRdo } from './../../../../../customers/src/app/auth/rdo/user.rdo';
+import { Expose } from 'class-transformer';
 
 export class CommentDto {
   @ApiProperty({
@@ -23,8 +21,7 @@ export class CommentDto {
     description: 'The author of the comment.'
   })
   @Expose()
-  @Type(() => UserRdo)
-  public user: UserRdo;
+  public userId: string;
 
   @ApiProperty({
     description: 'Date the comment was created.',

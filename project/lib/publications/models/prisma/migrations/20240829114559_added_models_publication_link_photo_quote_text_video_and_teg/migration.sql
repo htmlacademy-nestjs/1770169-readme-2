@@ -1,14 +1,14 @@
 -- CreateEnum
-CREATE TYPE "Type" AS ENUM ('VIDEO', 'TEXT', 'QUOTE', 'PHOTO', 'LINK');
+CREATE TYPE "Type" AS ENUM ('video', 'text', 'quote', 'photo', 'link');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('PUBLISHED', 'DRAFT');
+CREATE TYPE "Status" AS ENUM ('published', 'draft');
 
 -- CreateTable
 CREATE TABLE "publications" (
     "publication_id" TEXT NOT NULL,
     "type" "Type" NOT NULL,
-    "status" "Status" NOT NULL DEFAULT 'PUBLISHED',
+    "status" "Status" NOT NULL DEFAULT 'published',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "repost" BOOLEAN NOT NULL DEFAULT false,
