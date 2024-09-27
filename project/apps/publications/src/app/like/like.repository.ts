@@ -13,13 +13,32 @@ export class LikeRepository extends BasePostgresRepository<LikeEntity, Like> {
     super(clientService, LikeEntity.fromObject)
   }
 
-  public async findByPostId(id: string) {
+  public async save(entity: LikeEntity) {
+    const record = await this.clientService.like.create({
+      data: {
+        userId: entity.userId,
+        publicationId: entity.publicationId
+      }
+    });
+    entity.id = record.id;
+
+    return this.createEntityFromDocument(entity);
+  }
+
+  public async findByUserAndPostId(userId: string, postId: string) {
     const record = await this.clientService.like.findFirst({
       where: {
-        publicationId: id
+        userId: userId,
+        publicationId: postId
       }
     });
 
     return this.createEntityFromDocument(record);
+  }
+
+  public async delete(id: string) {
+    await this.clientService.like.delete({
+      where: {id}
+    });
   }
 }

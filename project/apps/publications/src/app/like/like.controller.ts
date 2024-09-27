@@ -14,7 +14,7 @@ export class LikeController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'The user is not logged in.'
   })
-  @Post(':id')
+  @Post('/')
   public async toggle(
     @Body() dto: LikeDto,
     @Param('postId') postId: string

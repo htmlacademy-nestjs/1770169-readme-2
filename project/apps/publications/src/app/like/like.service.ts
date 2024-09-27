@@ -13,17 +13,20 @@ export class LikeService {
     private readonly likeRepository: LikeRepository,
     private readonly postService: PostService
   ) {}
-  public async togglePostLike(postId: string, dto: LikeDto) {
-    const existsLike = await this.likeRepository.findByPostId(postId);
 
-    if (existsLike) {
-      return await this.likeRepository.delete(existsLike.id);
-    }
+  public async togglePostLike(postId: string, dto: LikeDto) {
     const existsPost = await this.postService.getPostById(postId);
 
     if (existsPost.status !== PostStatus.Published) {
       throw new ConflictException(ErrorMessage.POST_STATUS_ERROR_MESSAGE)
     }
+
+    const existsLike = await this.likeRepository.findByUserAndPostId(dto.userId, existsPost.id);
+
+    if (existsLike) {
+      return await this.likeRepository.delete(existsLike.id);
+    }
+
     const newLikePost = LikeEntity.fromDto(existsPost.id, dto);
 
     return await this.likeRepository.save(newLikePost);

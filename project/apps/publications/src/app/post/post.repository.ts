@@ -83,6 +83,7 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
 
     return records.map((record) => this.createEntityFromDocument({
       ...record,
+      tags: record.tag,
       commentCount: record.comments.length,
       likeCount: record.likes.length
     }));
@@ -126,6 +127,7 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
 
     return records.map((record) => this.createEntityFromDocument({
       ...record,
+      tags: record.tag,
       commentCount: record.comments.length,
       likeCount: record.likes.length
     }));

@@ -55,11 +55,11 @@ export class PostController {
 
   @Get('/')
   public async index(
+    @Query('count', new DefaultValuePipe(DEFAULT_MAX_POST_COUNT), ParseIntPipe) count: number,
     @Query('type', new DefaultValuePipe(undefined)) type: PostType,
     @Query('tagName', new DefaultValuePipe('#горы')) tagName: string,
     @Query('userId', new DefaultValuePipe(undefined)) userId: string,
-    @Query('sort', new DefaultValuePipe(SortType.Desc)) sort: SortType,
-    @Query('count', new DefaultValuePipe(DEFAULT_MAX_POST_COUNT), ParseIntPipe) count: number
+    @Query('sort', new DefaultValuePipe(SortType.Desc)) sort: SortType
   ) {
     const posts = await this.postService.getAllPosts({type, tagName, userId, sort, count});
 
