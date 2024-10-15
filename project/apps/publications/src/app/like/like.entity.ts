@@ -1,6 +1,6 @@
 import { Entity } from '@project/lib/core';
 import { Like } from '@project/lib/shared/app/types';
-import { LikeDto } from './dto/like.dto';
+import { LikeDTO } from './dto/like.dto';
 
 export class LikeEntity implements Like, Entity<string> {
   public id?: string;
@@ -23,7 +23,7 @@ export class LikeEntity implements Like, Entity<string> {
     return this;
   }
 
-  static fromDto(postId: string, dto: LikeDto) {
+  static fromDto(postId: string, dto: LikeDTO) {
     const entity = new LikeEntity();
     entity.publicationId = postId;
     entity.userId = dto.userId;

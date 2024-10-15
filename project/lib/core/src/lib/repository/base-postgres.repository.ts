@@ -8,7 +8,7 @@ export abstract class BasePostgresRepository<
     DocumentType = DefaultToObjectType
   > implements Repository<EntityType, DocumentType> {
   constructor(
-    protected readonly clientService: PrismaClientService,
+    protected readonly prismaClient: PrismaClientService,
     private readonly createEntity: (document: DocumentType) => EntityType
   ) {}
 

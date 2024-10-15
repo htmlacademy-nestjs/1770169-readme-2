@@ -10,13 +10,13 @@ import { ErrorMessage } from './post.constant';
 @Injectable()
 export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   constructor(
-    protected readonly clientService: PrismaClientService
+    protected readonly prismaClient: PrismaClientService
   ) {
-    super(clientService, PostEntity.fromObject)
+    super(prismaClient, PostEntity.fromObject)
   }
 
   public async findById(id: PostEntity['id']): Promise<PostEntity> {
-    const record = await this.clientService.publication.findFirst({
+    const record = await this.prismaClient.publication.findFirst({
       where: {
         id
       },
@@ -53,7 +53,7 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   }
 
   public async findByDraftStatus({sort, count}) {
-    const records = await this.clientService.publication.findMany({
+    const records = await this.prismaClient.publication.findMany({
       where: {
         status: PostStatus.Draft
       },
@@ -90,7 +90,7 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   }
 
   public async find({type, tagName, userId, sort, count}): Promise<PostEntity[]> {
-    const records = await this.clientService.publication.findMany({
+    const records = await this.prismaClient.publication.findMany({
       where: {
         userId: userId,
         type: type,
@@ -134,7 +134,7 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   }
 
   public async save(entity: PostEntity): Promise<PostEntity> {
-    const newRecord = await this.clientService.publication.create({
+    const newRecord = await this.prismaClient.publication.create({
       data: {
         type: entity.type,
         status: entity.status,
@@ -157,7 +157,7 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   }
 
   public async update(id: PostEntity['id'], entity: PostEntity): Promise<PostEntity> {
-    const record = await this.clientService.publication.update({
+    const record = await this.prismaClient.publication.update({
       where: {
         id
       },
@@ -174,7 +174,7 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   }
 
   public async delete(id: string): Promise<void> {
-    await this.clientService.publication.delete({
+    await this.prismaClient.publication.delete({
       where: {
         id
       }

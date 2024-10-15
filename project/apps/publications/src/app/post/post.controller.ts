@@ -15,12 +15,12 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PostService } from './post.service';
-import { CreatePostDto } from './dto/create-post.dto';
+import { CreatePostDTO } from './dto/create-post.dto';
 import { fillDto } from '@project/lib/shared/helpers';
-import { PostRdo } from './rdo/post.rdo';
+import { PostRDO } from './rdo/post.rdo';
 import { PostType, SortType } from '@project/lib/shared/app/types';
 import { DEFAULT_MAX_POST_COUNT } from './post.constant';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { UpdatePostDTO } from './dto/update-post.dto';
 
 @ApiTags('Publications')
 @Controller('posts')
@@ -38,10 +38,10 @@ export class PostController {
     description: 'The user is not logged in.'
   })
   @Post('/')
-  public async create(@Body() dto: CreatePostDto) {
+  public async create(@Body() dto: CreatePostDTO) {
     const newPost = await this.postService.createPost({...dto, userId: '66e87f4f646c29eff76565a8'});
 
-    return fillDto(PostRdo, newPost.toObject(), {exposeDefaultValues: false});
+    return fillDto(PostRDO, newPost.toObject(), {exposeDefaultValues: false});
   }
 
   @Post('/:id/repost')
@@ -50,7 +50,7 @@ export class PostController {
   ) {
     const newPost = await this.postService.repostPost(id, '66e9d8681f48c49323a88c87');
 
-    return fillDto(PostRdo, newPost.toObject(), {exposeDefaultValues: false});
+    return fillDto(PostRDO, newPost.toObject(), {exposeDefaultValues: false});
   }
 
   @Get('/')
@@ -63,7 +63,7 @@ export class PostController {
   ) {
     const posts = await this.postService.getAllPosts({type, tagName, userId, sort, count});
 
-    return fillDto(PostRdo, posts.map((post) => post.toObject()), {exposeDefaultValues: false});
+    return fillDto(PostRDO, posts.map((post) => post.toObject()), {exposeDefaultValues: false});
   }
 
   @ApiResponse({
@@ -78,7 +78,7 @@ export class PostController {
   ) {
     const posts = await this.postService.getPostsByDraftStatus({sort, count});
 
-    return fillDto(PostRdo, posts.map((post) => post.toObject()), {exposeDefaultValues: false});
+    return fillDto(PostRDO, posts.map((post) => post.toObject()), {exposeDefaultValues: false});
   }
 
   @ApiResponse({
@@ -90,7 +90,7 @@ export class PostController {
   public async show(@Param('id') id: string) {
     const post = await this.postService.getPostById(id);
 
-    return fillDto(PostRdo, post.toObject(), {exposeDefaultValues: false});
+    return fillDto(PostRDO, post.toObject(), {exposeDefaultValues: false});
   }
 
   @ApiResponse({
@@ -101,11 +101,11 @@ export class PostController {
   @HttpCode(200)
   public async update(
     @Param('id') id: string,
-    @Body() dto: UpdatePostDto
+    @Body() dto: UpdatePostDTO
   ) {
     const updatedPost = await this.postService.updatePostById(id, dto);
 
-    return fillDto(PostRdo, updatedPost.toObject(), {exposeDefaultValues: false});
+    return fillDto(PostRDO, updatedPost.toObject(), {exposeDefaultValues: false});
   }
 
   @ApiResponse({

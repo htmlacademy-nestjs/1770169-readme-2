@@ -1,15 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateVideoPostDto {
+import { TitleProperty, URLProperty } from '../video-post.constant';
+
+export class CreateVideoPostDTO {
   @ApiProperty({
-    description: 'Title of the publication',
-    example: 'Burabai Kazakhstan'
+    description: TitleProperty.DESCRIPTION,
+    example: TitleProperty.EXAMPLE
   })
   public title: string;
 
   @ApiProperty({
-    description: 'A valid link to a video page on the YouTube service.',
-    example: 'https://www.youtube.com/watch?v=xBInF48M0F0'
+    description: URLProperty.DESCRIPTION,
+    example: URLProperty.EXAMPLE
   })
   public url: string;
 }

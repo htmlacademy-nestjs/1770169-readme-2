@@ -1,15 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateLinkPostDto {
+import { DescriptionProperty, URLProperty } from '../link-post.constant';
+
+export class CreateLinkPostDTO {
   @ApiProperty({
-    description: 'Valid URL.',
-    example: 'https://nestjs.com/'
+    description: URLProperty.DESCRIPTION,
+    example: URLProperty.EXAMPLE
   })
   public url: string;
 
   @ApiProperty({
-    description: 'Description of the link.',
-    example: 'A progressive framework for creating efficient, reliable and scalable server applications.'
+    description: DescriptionProperty.DESCRIPTION,
+    example: DescriptionProperty.EXAMPLE
   })
   public description: string;
 }

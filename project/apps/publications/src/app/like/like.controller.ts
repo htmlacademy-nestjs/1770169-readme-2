@@ -1,22 +1,35 @@
 import { Body, Controller, HttpStatus, Param, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { LikeService } from './like.service';
-import { LikeDto } from './dto/like.dto';
 
-@ApiTags('Likes')
-@Controller('posts/:postId/like')
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
+import { LikeService } from './like.service';
+import { LikeDTO } from './dto/like.dto';
+import {
+  LIKE_STATUS_UPDATE_RESPONSE,
+  NOT_AUTHORIZED_RESPONSE,
+  Route,
+  ROUTE_PREFIX,
+  TAG
+} from './like.constant';
+
+@ApiTags(TAG)
+@Controller(ROUTE_PREFIX)
 export class LikeController {
   constructor(
     private readonly likeService: LikeService
   ) {}
 
   @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'The user is not logged in.'
+    status: HttpStatus.OK,
+    description: LIKE_STATUS_UPDATE_RESPONSE
   })
-  @Post('/')
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: NOT_AUTHORIZED_RESPONSE
+  })
+  @Post(Route.Root)
   public async toggle(
-    @Body() dto: LikeDto,
+    @Body() dto: LikeDTO,
     @Param('postId') postId: string
   ) {
     await this.likeService.togglePostLike(postId, dto);

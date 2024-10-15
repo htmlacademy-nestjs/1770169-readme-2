@@ -1,14 +1,14 @@
 import { Expose, Transform, Type } from 'class-transformer';
 
-import { PostTagsRdo } from '../../post-tags/rdo/post-tags.rdo';
+import { PostTagsRDO } from '../../post-tags/rdo/post-tags.rdo';
 import { PostStatus, PostType } from '@project/lib/shared/app/types';
-import { LinkPostRdo } from '../../link-post/rdo/link-post.rdo';
-import { PhotoPostRdo } from '../../photo-post/rdo/photo-post.rdo';
-import { QuotePostRdo } from '../../quote-post/rdo/quote-post.rdo';
-import { VideoPostRdo } from '../../video-post/rdo/video-post.rdo';
-import { TextPostRdo } from '../../text-post/rdo/text-post.rdo';
+import { LinkPostRDO } from '../../link-post/rdo/link-post.rdo';
+import { PhotoPostRDO } from '../../photo-post/rdo/photo-post.rdo';
+import { QuotePostRDO } from '../../quote-post/rdo/quote-post.rdo';
+import { VideoPostRDO } from '../../video-post/rdo/video-post.rdo';
+import { TextPostRDO } from '../../text-post/rdo/text-post.rdo';
 
-export class PostRdo {
+export class PostRDO {
   @Expose()
   public id: string;
 
@@ -40,27 +40,27 @@ export class PostRdo {
   public userId: string;
 
   @Expose()
-  @Type(() => LinkPostRdo)
-  public link: LinkPostRdo;
+  @Type(() => LinkPostRDO)
+  public link: LinkPostRDO;
 
   @Expose()
-  @Type(() => PhotoPostRdo)
-  public photo: PhotoPostRdo;
+  @Type(() => PhotoPostRDO)
+  public photo: PhotoPostRDO;
 
   @Expose()
-  @Type(() => QuotePostRdo)
-  public quote: QuotePostRdo;
+  @Type(() => QuotePostRDO)
+  public quote: QuotePostRDO;
 
   @Expose()
-  @Type(() => VideoPostRdo)
-  public video: VideoPostRdo;
+  @Type(() => VideoPostRDO)
+  public video: VideoPostRDO;
 
   @Expose()
-  @Type(() => TextPostRdo)
-  public text: TextPostRdo;
+  @Type(() => TextPostRDO)
+  public text: TextPostRDO;
 
   @Expose()
-  @Type(() => PostTagsRdo)
+  @Type(() => PostTagsRDO)
   @Transform(({value}) => value && [...value.tags])
   public tags: string[];
 }

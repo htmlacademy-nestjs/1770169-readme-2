@@ -1,15 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateCommentDto {
+import { ContentProperty, UserIdProperty } from '../comment.constant';
+
+export class CreateCommentDTO {
   @ApiProperty({
-    description: 'The text of the comment.',
-    example: 'Красивый вид на озеро и горы).'
+    description: ContentProperty.DESCRIPTION,
+    example: ContentProperty.EXAMPLE
   })
   public content: string;
 
   @ApiProperty({
-    description: 'A unique user ID.',
-    example: '667c673deb3171fbdaa4ce26'
+    description: UserIdProperty.DESCRIPTION,
+    example: UserIdProperty.EXAMPLE
   })
   public userId: string;
 }

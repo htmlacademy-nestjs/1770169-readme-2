@@ -70,18 +70,15 @@ function getPhotos() {
   return [
     {
       photoId: uuids.get('photo0'),
-      image: 'cat.jpg',
-      tagId: uuids.get('tag2')
+      image: 'cat.jpg'
     },
     {
       photoId: uuids.get('photo1'),
-      image: 'library.png',
-      tagId: uuids.get('tag3')
+      image: 'library.png'
     },
     {
       photoId: uuids.get('photo2'),
-      image: 'forest.jpg',
-      tagId: uuids.get('tag1')
+      image: 'forest.jpg'
     }
   ]
 }
@@ -146,20 +143,17 @@ function getVideos() {
     {
       videoId: uuids.get('video0'),
       title: 'Бурабай Казахстан',
-      url: 'https://www.youtube.com/watch?v=xBInF48M0F0',
-      tagId: uuids.get('tag0'),
+      url: 'https://www.youtube.com/watch?v=xBInF48M0F0'
     },
     {
       videoId: uuids.get('video1'),
       title: 'Восход солнца в Токио',
-      url: 'https://www.youtube.com/watch?v=6Nlfqu_63Mk',
-      tagId: uuids.get('tag4'),
+      url: 'https://www.youtube.com/watch?v=6Nlfqu_63Mk'
     },
     {
       videoId: uuids.get('video2'),
       title: 'Горный Алтай',
-      url: 'https://www.youtube.com/watch?v=DZdUS9cDovQ',
-      tagId: uuids.get('tag5'),
+      url: 'https://www.youtube.com/watch?v=DZdUS9cDovQ'
     }
   ]
 }
@@ -174,7 +168,8 @@ function getPublications() {
       status: 'published',
       repost: false,
       userId:  userIds[0],
-      photoId: uuids.get('photo0')
+      photoId: uuids.get('photo0'),
+      tagId: uuids.get('tag2')
     },
     {
       publicationId: uuids.get('publication1'),
@@ -206,7 +201,8 @@ function getPublications() {
       status: 'draft',
       repost: false,
       userId:  userIds[1],
-      videoId: uuids.get('video0')
+      videoId: uuids.get('video0'),
+      tagId: uuids.get('tag5'),
     },
     {
       publicationId: uuids.get('publication5'),
@@ -217,6 +213,7 @@ function getPublications() {
       videoId: uuids.get('video0'),
       originalUserId: userIds[1],
       originalPublicationId: uuids.get('publication4'),
+      tagId: uuids.get('tag5'),
     }
   ]
 }
@@ -275,7 +272,7 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const tag of tags) {
     await prismaClient.tag.create({
       data: {
-        tagId: tag.tagId,
+        id: tag.tagId,
         tags: tag.tags
       }
     })
@@ -286,7 +283,7 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const link of links) {
     await prismaClient.link.create({
       data: {
-        linkId: link.linkId,
+        id: link.linkId,
         url: link.url,
         description: link.description
       }
@@ -298,9 +295,8 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const photo of photos) {
     await prismaClient.photo.create({
       data: {
-        photoId: photo.photoId,
-        image: photo.image,
-        tagId: photo.tagId
+        id: photo.photoId,
+        image: photo.image
       }
     })
   }
@@ -310,7 +306,7 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const quote of quotes) {
     await prismaClient.quote.create({
       data: {
-        quoteId: quote.quoteId,
+        id: quote.quoteId,
         author: quote.author,
         content: quote.content
       }
@@ -322,7 +318,7 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const text of texts) {
     await prismaClient.text.create({
       data: {
-        textId: text.textId,
+        id: text.textId,
         title: text.title,
         preview: text.preview,
         content: text.content
@@ -335,10 +331,9 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const video of videos) {
     await prismaClient.video.create({
       data: {
-        videoId: video.videoId,
+        id: video.videoId,
         title: video.title,
-        url: video.url,
-        tagId: video.tagId
+        url: video.url
       }
     })
   }
@@ -348,14 +343,15 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const publication of publications) {
     await prismaClient.publication.create({
       data: {
-        publicationId: publication.publicationId,
+        id: publication.publicationId,
         type: publication.type.toUpperCase() as Type,
         status: publication.status.toUpperCase() as Status,
         repost: publication.repost,
         userId: publication.userId,
         [`${publication.type}Id`]: publication[`${publication.type}Id`],
         originalUserId: publication.originalUserId,
-        originalPublicationId: publication.originalPublicationId
+        originalPublicationId: publication.originalPublicationId,
+        tagId: publication.tagId
       }
     })
   }
@@ -365,7 +361,7 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const comment of comments) {
     await prismaClient.comment.create({
       data: {
-        commentId: comment.commentId,
+        id: comment.commentId,
         content: comment.content,
         publicationId: comment.publicationId as string,
         userId: comment.userId
@@ -378,7 +374,7 @@ async function seedDb(prismaClient: PrismaClient) {
   for(const like of likes) {
     await prismaClient.like.create({
       data: {
-        likeId: like.likeId,
+        id: like.likeId,
         publicationId: like.publicationId  as string,
         userId: like.userId
       }

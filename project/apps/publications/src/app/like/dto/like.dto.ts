@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserIdProperty } from '../like.constant';
 
-export class LikeDto {
+export class LikeDTO {
   @ApiProperty({
-    description: 'A unique user ID.',
-    example: '667c673deb3171fbdaa4ce26'
+    description: UserIdProperty.DESCRIPTION,
+    example: UserIdProperty.EXAMPLE
   })
   public userId: string;
 }

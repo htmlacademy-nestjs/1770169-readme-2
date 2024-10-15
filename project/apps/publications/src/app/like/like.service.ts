@@ -2,10 +2,10 @@ import { ConflictException, Injectable } from '@nestjs/common';
 
 import { LikeRepository } from './like.repository';
 import { LikeEntity } from './like.entity';
-import { LikeDto } from './dto/like.dto';
+import { LikeDTO } from './dto/like.dto';
 import { PostService } from '../post/post.service';
 import { PostStatus } from '@project/lib/shared/app/types';
-import { ErrorMessage } from './like.constant';
+import { POST_STATUS_ERROR_MESSAGE } from './like.constant';
 
 @Injectable()
 export class LikeService {
@@ -14,21 +14,21 @@ export class LikeService {
     private readonly postService: PostService
   ) {}
 
-  public async togglePostLike(postId: string, dto: LikeDto) {
+  public async togglePostLike(postId: string, dto: LikeDTO) {
     const existsPost = await this.postService.getPostById(postId);
 
     if (existsPost.status !== PostStatus.Published) {
-      throw new ConflictException(ErrorMessage.POST_STATUS_ERROR_MESSAGE)
+      throw new ConflictException(POST_STATUS_ERROR_MESSAGE)
     }
 
     const existsLike = await this.likeRepository.findByUserAndPostId(dto.userId, existsPost.id);
 
     if (existsLike) {
-      return await this.likeRepository.delete(existsLike.id);
+      return this.likeRepository.delete(existsLike.id);
     }
 
     const newLikePost = LikeEntity.fromDto(existsPost.id, dto);
 
-    return await this.likeRepository.save(newLikePost);
+    return this.likeRepository.save(newLikePost);
   }
 }

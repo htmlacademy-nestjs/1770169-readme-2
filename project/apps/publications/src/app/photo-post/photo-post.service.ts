@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreatePhotoPostDto } from './dto/create-photo-post.dto';
+import { CreatePhotoPostDTO } from './dto/create-photo-post.dto';
 import { PhotoPostEntity } from './photo-post.entity';
 import { PhotoPostRepository } from './photo-post.repository';
-import { UpdatePhotoPostDto } from './dto/update-photo-post.dto';
+import { UpdatePhotoPostDTO } from './dto/update-photo-post.dto';
 
 @Injectable()
 export class PhotoPostService {
@@ -12,22 +12,22 @@ export class PhotoPostService {
   ) {}
 
   public async getPostContentById(id: string) {
-    return await this.photoPostRepository.findById(id);
+    return this.photoPostRepository.findById(id);
   }
 
-  public async createPostContent(dto: CreatePhotoPostDto) {
+  public async createPostContent(dto: CreatePhotoPostDTO) {
     const newPhotoPost = new PhotoPostEntity(dto);
 
-    return await this.photoPostRepository.save(newPhotoPost);
+    return this.photoPostRepository.save(newPhotoPost);
   }
 
-  public async updatePostContent(id: string, dto: UpdatePhotoPostDto) {
+  public async updatePostContent(id: string, dto: UpdatePhotoPostDTO) {
     const existPhotoPost = await this.photoPostRepository.findById(id);
 
-    if(dto.image !== 'undefined' && existPhotoPost.image !== dto.image) {
+    if(!!dto.image && existPhotoPost.image !== dto.image) {
       existPhotoPost.image = dto.image;
 
-      return await this.photoPostRepository.update(id, existPhotoPost);
+      return this.photoPostRepository.update(id, existPhotoPost);
     }
 
     return existPhotoPost;

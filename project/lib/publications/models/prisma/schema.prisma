@@ -4,7 +4,7 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-enum Type {
+enum PostType {
   video
   text
   quote
@@ -12,7 +12,7 @@ enum Type {
   link
 }
 
-enum Status {
+enum PostStatus {
   published
   draft
 }
@@ -29,8 +29,8 @@ datasource db {
 
 model Publication {
   id                    String    @id @default(uuid())
-  type                  Type
-  status                Status    @default(published)
+  type                  PostType
+  status                PostStatus    @default(published)
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
   publishedDate         DateTime  @default(now()) @map("published_date")

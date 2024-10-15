@@ -23,12 +23,3 @@ export function createMessage<T>(message: string, expressions: T[] = []): string
 export function getMongoConnectionString({host, port, database, username, userPassword, authSource}): string {
   return `mongodb://${username}:${userPassword}@${host}:${port}/${database}?authSource=${authSource}`;
 }
-
-export function removeEmptyKeys<T>(obj: T): T {
-  Object.keys(obj).forEach((key) => {
-    if (obj[key] === null || obj[key] === undefined) {
-      delete obj[key];
-    }
-  })
-  return obj;
-}

@@ -8,13 +8,13 @@ import { Like } from '@project/lib/shared/app/types';
 @Injectable()
 export class LikeRepository extends BasePostgresRepository<LikeEntity, Like> {
   constructor(
-    protected readonly clientService: PrismaClientService
+    protected readonly prismaClient: PrismaClientService
   ) {
-    super(clientService, LikeEntity.fromObject)
+    super(prismaClient, LikeEntity.fromObject)
   }
 
   public async save(entity: LikeEntity) {
-    const record = await this.clientService.like.create({
+    const record = await this.prismaClient.like.create({
       data: {
         userId: entity.userId,
         publicationId: entity.publicationId
@@ -26,7 +26,7 @@ export class LikeRepository extends BasePostgresRepository<LikeEntity, Like> {
   }
 
   public async findByUserAndPostId(userId: string, postId: string) {
-    const record = await this.clientService.like.findFirst({
+    const record = await this.prismaClient.like.findFirst({
       where: {
         userId: userId,
         publicationId: postId
@@ -37,7 +37,7 @@ export class LikeRepository extends BasePostgresRepository<LikeEntity, Like> {
   }
 
   public async delete(id: string) {
-    await this.clientService.like.delete({
+    await this.prismaClient.like.delete({
       where: {id}
     });
   }

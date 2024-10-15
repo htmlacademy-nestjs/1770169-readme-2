@@ -1,15 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateQuotePostDto {
+import { AuthorProperty, ContentProperty } from '../quote-post.constant';
+
+export class UpdateQuotePostDTO {
   @ApiProperty({
-    description: 'The author of the quote.',
-    example: 'Fyodor Dostoevsky'
+    description: AuthorProperty.DESCRIPTION,
+    example: AuthorProperty.EXAMPLE
   })
   public author?: string;
 
   @ApiProperty({
-    description: 'The contents of the quote publication.',
-    example: 'One must love life more than the very meaning of life!'
+    description: ContentProperty.DESCRIPTION,
+    example: ContentProperty.EXAMPLE
   })
   public content?: string;
 }

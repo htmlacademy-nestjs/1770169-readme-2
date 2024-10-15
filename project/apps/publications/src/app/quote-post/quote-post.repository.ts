@@ -1,34 +1,34 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaClientService } from '@project/lib/publications/models';
 import { createMessage } from '@project/lib/shared/helpers';
 import { BasePostgresRepository } from '@project/lib/core';
 import { QuotePost } from '@project/lib/shared/app/types';
 import { QuotePostEntity } from './quote-post.entity';
-import { ErrorMessage } from './quote-post.constant';
+import { NOT_FOUND_BY_ID_MESSAGE } from './quote-post.constant';
 
 @Injectable()
 export class QuotePostRepository extends BasePostgresRepository<QuotePostEntity, QuotePost> {
   constructor(
-    protected readonly clientService: PrismaClientService
+    protected readonly prismaClient: PrismaClientService
   ) {
-    super(clientService, QuotePostEntity.fromObject);
+    super(prismaClient, QuotePostEntity.fromObject);
   }
 
   public async findById(id: QuotePostEntity['id']): Promise<QuotePostEntity> {
-    const record = await this.clientService.quote.findFirst({
+    const record = await this.prismaClient.quote.findFirst({
       where: {id}
     });
 
     if(!record) {
-      throw new ConflictException(createMessage(ErrorMessage.NOT_FOUND_BY_ID_MESSAGE, [id]));
+      throw new NotFoundException(createMessage(NOT_FOUND_BY_ID_MESSAGE, [id]));
     }
 
     return this.createEntityFromDocument(record);
   }
 
   public async save(entity: QuotePostEntity): Promise<QuotePostEntity> {
-    const newRecord = await this.clientService.quote.create({
+    const newRecord = await this.prismaClient.quote.create({
       data: {
         author: entity.author,
         content: entity.content
@@ -40,7 +40,7 @@ export class QuotePostRepository extends BasePostgresRepository<QuotePostEntity,
   }
 
   public async update(id: QuotePostEntity['id'], entity: QuotePostEntity): Promise<QuotePostEntity> {
-    const record = await this.clientService.quote.update({
+    const record = await this.prismaClient.quote.update({
       where: {id},
       data: {
         author: entity.author,

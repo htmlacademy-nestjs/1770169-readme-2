@@ -1,65 +1,78 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { PostStatus } from '@project/lib/shared/app/types';
+import {
+  AuthorProperty,
+  ContentProperty,
+  DescriptionProperty,
+  ImageProperty,
+  PreviewProperty,
+  PublishedDateProperty,
+  StatusProperty,
+  TagsProperty,
+  TitleProperty,
+  URLProperty
+} from '../post.constant';
 
-export class UpdatePostDto {
+export class UpdatePostDTO {
   @ApiProperty({
-    description: 'The publication status is one of two states: published or draft.',
-    example: 'published'
+    enum: PostStatus,
+    description: StatusProperty.DESCRIPTION,
+    example: StatusProperty.EXAMPLE
   })
   public status?: PostStatus;
 
   @ApiProperty({
-    description: 'The publication publication date.',
-    example: '2022-01-18T17:36:34.064Z'
+    description: PublishedDateProperty.DESCRIPTION,
+    example: PublishedDateProperty.EXAMPLE
   })
   public publishedDate?: Date;
 
   @ApiProperty({
-    description: 'Valid URL.',
-    example: 'https://nestjs.com/'
+    description: URLProperty.DESCRIPTION,
+    example: URLProperty.EXAMPLE
   })
   public url?: string;
 
   @ApiProperty({
-    description: 'Description of the link.',
-    example: 'A progressive framework for creating efficient, reliable and scalable server applications.'
+    description: DescriptionProperty.DESCRIPTION,
+    example: DescriptionProperty.EXAMPLE
   })
   public description?: string;
 
   @ApiProperty({
-    description: 'Image in jpg or png format.',
-    example: 'cat.jpg'
+    description: ImageProperty.DESCRIPTION,
+    example: ImageProperty.EXAMPLE
   })
   public image?: string;
 
   @ApiProperty({
-    description: 'The author of the quote.',
-    example: 'Fyodor Dostoevsky'
+    description: AuthorProperty.DESCRIPTION,
+    example: AuthorProperty.EXAMPLE
   })
   public author?: string;
 
   @ApiProperty({
-    description: 'The contents of the quote publication.',
-    example: 'One must love life more than the very meaning of life!'
+    description: ContentProperty.DESCRIPTION,
+    example: ContentProperty.EXAMPLE
   })
   public content?: string;
 
   @ApiProperty({
-    description: 'Title of the publication.',
-    example: 'Artificial intelligence still deprives people of work.'
+    description: TitleProperty.DESCRIPTION,
+    example: TitleProperty.EXAMPLE
   })
   public title?: string;
 
   @ApiProperty({
-    description: 'Announcement of the publication.',
-    example: 'The scientific journal has used AI to create scientific articles.'
+    description: PreviewProperty.DESCRIPTION,
+    example: PreviewProperty.EXAMPLE
   })
   public preview?: string;
 
   @ApiProperty({
-    description: 'Tags for the post.',
-    example: '#painting#creativity#landscape#forest'
+    description: TagsProperty.DESCRIPTION,
+    example: TagsProperty.EXAMPLE
   })
   public tags?: string;
 }

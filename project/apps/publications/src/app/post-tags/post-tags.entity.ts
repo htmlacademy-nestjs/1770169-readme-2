@@ -1,6 +1,6 @@
 import { Entity } from '@project/lib/core';
 import { PostTags } from '@project/lib/shared/app/types';
-import { CreatePostTagDto } from './dto/create-post-tags.dto';
+import { CreatePostTagDTO } from './dto/create-post-tags.dto';
 
 export class PostTagsEntity implements PostTags, Entity<string, PostTags> {
   public id?: string;
@@ -24,17 +24,17 @@ export class PostTagsEntity implements PostTags, Entity<string, PostTags> {
     return new PostTagsEntity().populate(data);
   }
 
-  static fromDto(dto: CreatePostTagDto) {
+  static fromDto(dto: CreatePostTagDTO) {
     const entity = new PostTagsEntity();
     entity.tags = this.toUniqueArray(dto.tags)
 
     return entity;
   }
 
-  static toUniqueArray(tag: string) {
-    const tagList = tag
+  static toUniqueArray(tags: string) {
+    const tagList = tags
       .split(/\s*#\s*/)
-      .filter((element) => element)
+      .filter(Boolean)
       .map((element) => element
         .replace(/(.)/,'#$1')
         .toLowerCase()

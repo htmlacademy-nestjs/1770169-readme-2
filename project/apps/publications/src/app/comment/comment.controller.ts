@@ -1,53 +1,81 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query
+} from '@nestjs/common';
 
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/lib/shared/helpers';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentDto } from './rdo/comment.dto';
+import { CreateCommentDTO } from './dto/create-comment.dto';
+import { CommentRDO } from './rdo/comment.rdo';
 import { CommentService } from './comment.service';
-import { DEFAULT_MAX_COMMENT_COUNT } from './comment.constant';
+import {
+  COMMENT_CREATED_RESPONSE,
+  COMMENT_DELETE_RESPONSE,
+  COMMENTS_FOUND_RESPONSE,
+  DEFAULT_MAX_COMMENT_COUNT,
+  NOT_AUTHORIZED_RESPONSE,
+  Route,
+  ROUTE_PREFIX,
+  TAG
+} from './comment.constant';
 
-@ApiTags('Comments')
-@Controller('posts/:postId/comments')
+@ApiTags(TAG)
+@Controller(ROUTE_PREFIX)
 export class CommentController {
   constructor(
     private readonly commentService: CommentService
   ) {}
 
   @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Validation error.'
+    status: HttpStatus.OK,
+    description: COMMENT_CREATED_RESPONSE
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'The user is not logged in.'
+    description: NOT_AUTHORIZED_RESPONSE
   })
-  @Post('/')
+  @Post(Route.Root)
   public async create(
-    @Body() dto: CreateCommentDto,
+    @Body() dto: CreateCommentDTO,
     @Param('postId') postId: string
   ) {
     const newComment = await this.commentService.createComment(postId, dto);
 
-    return fillDto(CommentDto, newComment.toObject());
+    return fillDto(CommentRDO, newComment.toObject());
   }
 
-  @Get('/')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: COMMENTS_FOUND_RESPONSE
+  })
+  @Get(Route.Root)
   public async show(
     @Param('postId') postId: string,
     @Query('count', new DefaultValuePipe(DEFAULT_MAX_COMMENT_COUNT), ParseIntPipe) count: number
   ) {
     const comments = await this.commentService.getCommentsByPostId(postId, {count});
 
-    return fillDto(CommentDto, comments.map((comment) => comment.toObject()));
+    return fillDto(CommentRDO, comments.map((comment) => comment.toObject()));
   }
 
   @ApiResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'The user is not logged in.'
+    status: HttpStatus.OK,
+    description: COMMENT_DELETE_RESPONSE
   })
-  @Delete('/:id')
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: NOT_AUTHORIZED_RESPONSE
+  })
+  @Delete(Route.CommentParam)
   public async destroy(@Param('id') id: string) {
     await this.commentService.deleteCommentById(id);
   }

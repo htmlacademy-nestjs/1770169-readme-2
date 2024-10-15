@@ -11,8 +11,8 @@ import { TextPostService } from '../text-post/text-post.service';
 import { QuotePostService } from '../quote-post/quote-post.service';
 import { PhotoPostService } from '../photo-post/photo-post.service';
 import { PostEntity } from './post.entity';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostDTO } from './dto/create-post.dto';
+import { UpdatePostDTO } from './dto/update-post.dto';
 import { PostTagsEntity } from '../post-tags/post-tags.entity';
 import { createMessage, removeEmptyKeys } from '@project/lib/shared/helpers';
 import { ErrorMessage } from './post.constant';
@@ -45,7 +45,7 @@ export class PostService {
     private readonly photoPostService: PhotoPostService,
   ) {}
 
-  public async createPost(dto: CreatePostDto) {
+  public async createPost(dto: CreatePostDTO) {
     let tags: PostTagsEntity;
 
     if(dto.tags) {
@@ -106,7 +106,7 @@ export class PostService {
         .map((record) => removeEmptyKeys(record)));
   }
 
-  public async updatePostById(id: string, dto: UpdatePostDto) {
+  public async updatePostById(id: string, dto: UpdatePostDTO) {
     const existsPost = await this.postRepository.findById(id).then((record) => removeEmptyKeys(record));
     let newTags = undefined;
     let isExistsPostUpdated = false;

@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdatePostTagDto {
+import { TagsProperty } from '../post-tags.constant';
+
+export class UpdatePostTagDTO {
   @ApiProperty({
-    description: 'List of publication tags.',
-    example: '#city#japan#sunrise#tokio'
+    description: TagsProperty.DESCRIPTION,
+    example: TagsProperty.EXAMPLE
   })
   public tags?: string;
 }

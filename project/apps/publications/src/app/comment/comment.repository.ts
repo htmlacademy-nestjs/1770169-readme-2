@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaClientService } from '@project/lib/publications/models';
 import { createMessage } from '@project/lib/shared/helpers';
@@ -6,30 +6,30 @@ import { BasePostgresRepository } from '@project/lib/core';
 import { Comment } from '@project/lib/shared/app/types';
 import { CommentEntity } from './comment.entity';
 import { PostEntity } from '../post/post.entity';
-import { ErrorMessage } from './comment.constant';
+import { NOT_FOUND_BY_ID_MESSAGE } from './comment.constant';
 
 @Injectable()
 export class CommentRepository extends BasePostgresRepository<CommentEntity, Comment> {
   constructor(
-    protected readonly clientService: PrismaClientService
+    protected readonly prismaClient: PrismaClientService
   ) {
-    super(clientService, CommentEntity.fromObject);
+    super(prismaClient, CommentEntity.fromObject);
   }
 
   public async findById(id: CommentEntity['id']): Promise<CommentEntity> {
-    const record = await this.clientService.comment.findFirst({
+    const record = await this.prismaClient.comment.findFirst({
       where: {id}
     });
 
     if(!record) {
-      throw new ConflictException(createMessage(ErrorMessage.NOT_FOUND_POST_BY_ID_MESSAGE, [id]));
+      throw new NotFoundException(createMessage(NOT_FOUND_BY_ID_MESSAGE, [id]));
     }
 
     return this.createEntityFromDocument(record);
   }
 
   public async findByPostId(postId: PostEntity['id'], {count}): Promise<CommentEntity[]> {
-    const records = await this.clientService.comment.findMany({
+    const records = await this.prismaClient.comment.findMany({
       where: {
         publicationId: postId
       },
@@ -40,7 +40,7 @@ export class CommentRepository extends BasePostgresRepository<CommentEntity, Com
   }
 
   public async save(entity: CommentEntity): Promise<CommentEntity> {
-    const newRecord = await this.clientService.comment.create({
+    const newRecord = await this.prismaClient.comment.create({
       data: {
         content: entity.content,
         userId: entity.userId,
@@ -53,7 +53,7 @@ export class CommentRepository extends BasePostgresRepository<CommentEntity, Com
   }
 
   public async deleteById(id: CommentEntity['id']): Promise<void> {
-    await this.clientService.comment.delete({
+    await this.prismaClient.comment.delete({
       where: {id}
     });
   }

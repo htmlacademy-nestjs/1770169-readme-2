@@ -1,7 +1,7 @@
 import { Entity } from '@project/lib/core';
 
 import { Comment } from '@project/lib/shared/app/types';
-import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateCommentDTO } from './dto/create-comment.dto';
 
 
 export class CommentEntity implements Comment, Entity<string> {
@@ -36,7 +36,7 @@ export class CommentEntity implements Comment, Entity<string> {
     return new CommentEntity().populate(comment);
   }
 
-  static fromDto(postId: string, dto: CreateCommentDto) {
+  static fromDto(postId: string, dto: CreateCommentDTO) {
     const entity = new CommentEntity();
     entity.content = dto.content;
     entity.userId = dto.userId;

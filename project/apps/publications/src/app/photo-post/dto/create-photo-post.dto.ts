@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreatePhotoPostDto {
+import { ImageProperty } from '../photo-post.constant';
+
+export class CreatePhotoPostDTO {
   @ApiProperty({
-    description: 'Image in jpg or png format.',
-    example: 'cat.jpg'
+    description: ImageProperty.DESCRIPTION,
+    example: ImageProperty.EXAMPLE
   })
   public image: string;
 }

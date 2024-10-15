@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateTextPostDto } from './dto/create-text-post.dto';
+import { CreateTextPostDTO } from './dto/create-text-post.dto';
 import { TextPostEntity } from './text-post.entity';
 import { TextPostRepository } from './text-post.repository';
-import { UpdateTextPostDto } from './dto/update-text-post.dto';
+import { UpdateTextPostDTO } from './dto/update-text-post.dto';
 
 @Injectable()
 export class TextPostService {
@@ -12,28 +12,28 @@ export class TextPostService {
   ) {}
 
   public async getPostContentById(id: string) {
-    return await this.textPostRepository.findById(id);
+    return this.textPostRepository.findById(id);
   }
 
-  public async createPostContent(dto: CreateTextPostDto) {
+  public async createPostContent(dto: CreateTextPostDTO) {
     const newTextPost = new TextPostEntity(dto);
 
-    return await this.textPostRepository.save(newTextPost);
+    return this.textPostRepository.save(newTextPost);
   }
 
-  public async updatePostContent(id: string, dto: UpdateTextPostDto) {
+  public async updatePostContent(id: string, dto: UpdateTextPostDTO) {
     const existTextPost = await this.textPostRepository.findById(id);
     let isExistTextPostUpdated = false;
 
     for(const [key, value] of Object.entries(dto)) {
-      if(value !== 'undefined' && existTextPost[key] !== value) {
+      if(!!value && existTextPost[key] !== value) {
         existTextPost[key] = value;
         isExistTextPostUpdated = true;
       }
     }
 
     if(isExistTextPostUpdated) {
-      return await this.textPostRepository.update(id, existTextPost);
+      return this.textPostRepository.update(id, existTextPost);
     }
 
     return existTextPost;
