@@ -96,7 +96,7 @@ export class PostService {
     let isExistsPostUpdated = false;
     let tags: PostTagsEntity;
 
-    const content = await this.postContent[existsPost.type].updatePostContent(existsPost[existsPost.type].id, dto);
+    await this.postContent[existsPost.type].updatePostContent(existsPost[existsPost.type].id, dto);
 
     for (const [key, value] of Object.entries(dto)) {
       if (!value) {
@@ -124,7 +124,7 @@ export class PostService {
     if (isExistsPostUpdated) {
       return this.postRepository.update(existsPost.id, existsPost);
     }
-    //existsPost[existsPost.type].populate(content.toObject())
+
     existsPost.tags.populate(tags.toObject())
 
     return existsPost;
