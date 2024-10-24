@@ -14,16 +14,9 @@ import { PostEntity } from './post.entity';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { PostTagsEntity } from '../post-tags/post-tags.entity';
-import { createMessage, removeEmptyKeys } from '@project/lib/shared/helpers';
-import { ErrorMessage } from './post.constant';
-
-type PostContent = {
-  [PostType.Video]: VideoPostService,
-  [PostType.Link]: LinkPostService,
-  [PostType.Text]: TextPostService,
-  [PostType.Quote]: QuotePostService,
-  [PostType.Photo]: PhotoPostService
-}
+import { createMessage } from '@project/lib/shared/helpers';
+import { NOT_FOUND_BY_ID_MESSAGE, REPOST_ERROR_MESSAGE } from './post.constant';
+import { PostContent } from './post.type';
 
 @Injectable()
 export class PostService {
@@ -61,14 +54,14 @@ export class PostService {
     }
     const newPost = new PostEntity(post);
 
-    return await this.postRepository.save(newPost);
+    return this.postRepository.save(newPost);
   }
 
   public async repostPost(id: string, userId: string) {
     const existsPost = await this.postRepository.findById(id);
 
     if(existsPost.repost) {
-      throw new Error(ErrorMessage.REPOST_ERROR_MESSAGE);
+      throw new Error(REPOST_ERROR_MESSAGE);
     }
 
     const post = {
@@ -83,59 +76,56 @@ export class PostService {
       originalPublicationId: existsPost.id
     }
     const newPost = new PostEntity(post);
-    return await this.postRepository.save(newPost);
+    return this.postRepository.save(newPost);
   }
 
   public async getPostById(id: string) {
-    return await this.postRepository
-      .findById(id)
-      .then((record) => removeEmptyKeys(record));
+    return this.postRepository.findById(id);
   }
 
   public async getAllPosts({type, tagName, userId, sort, count}) {
-    return await this.postRepository
-      .find({type, tagName, userId, sort, count})
-      .then((records) => records
-        .map((record) => removeEmptyKeys(record)));
+    return this.postRepository.find({type, tagName, userId, sort, count});
   }
 
   public async getPostsByDraftStatus({sort, count}) {
-    return await this.postRepository
-      .findByDraftStatus({sort, count})
-      .then((records) => records
-        .map((record) => removeEmptyKeys(record)));
+    return this.postRepository.findByDraftStatus({sort, count});
   }
 
   public async updatePostById(id: string, dto: UpdatePostDTO) {
-    const existsPost = await this.postRepository.findById(id).then((record) => removeEmptyKeys(record));
-    let newTags = undefined;
+    const existsPost = await this.postRepository.findById(id);
     let isExistsPostUpdated = false;
+    let tags: PostTagsEntity;
 
-    await this.postContent[existsPost.type].updatePostContent(existsPost[existsPost.type].id, dto);
+    const content = await this.postContent[existsPost.type].updatePostContent(existsPost[existsPost.type].id, dto);
 
     for (const [key, value] of Object.entries(dto)) {
-      if (value !== 'undefined') {
-        if (key === 'tags') {
-          if (existsPost.tags) {
-            await this.postTagsService.updateTags(existsPost.tags.id, {tags: dto.tags});
-          } else {
-            newTags = await this.postTagsService.createTags({tags: dto.tags});
-            isExistsPostUpdated = true;
-          }
-          continue;
+      if (!value) {
+        continue;
+      }
+
+      if (key === 'tags') {
+        if (!existsPost.tags) {
+          tags = await this.postTagsService.createTags({tags: dto.tags});
+        } else {
+          tags = await this.postTagsService.updateTags(existsPost.tags.id, {tags: dto.tags});
         }
 
-        if (existsPost[key] !== value) {
-          existsPost[key] = value;
-          isExistsPostUpdated = true;
-        }
+        continue;
+      }
+
+      if (existsPost[key] !== value) {
+        existsPost[key] = value;
+        isExistsPostUpdated = true;
+
+        continue;
       }
     }
 
     if (isExistsPostUpdated) {
-      existsPost.tags = newTags;
-      return await this.postRepository.update(existsPost.id, existsPost);
+      return this.postRepository.update(existsPost.id, existsPost);
     }
+    //existsPost[existsPost.type].populate(content.toObject())
+    existsPost.tags.populate(tags.toObject())
 
     return existsPost;
   }
@@ -144,7 +134,7 @@ export class PostService {
     try {
       await this.postRepository.delete(id);
     } catch {
-      throw new ConflictException(createMessage(ErrorMessage.NOT_FOUND_BY_ID_MESSAGE, [id]));
+      throw new ConflictException(createMessage(NOT_FOUND_BY_ID_MESSAGE, [id]));
     }
   }
 }

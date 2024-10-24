@@ -19,6 +19,7 @@ enum PostStatus {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["strictUndefinedChecks"]
   output   = "../../../../node_modules/.prisma/client"
 }
 
@@ -48,7 +49,7 @@ model Publication {
   textId                String?   @map("text_id") @db.Char(36)
   video                 Video?    @relation(fields: [videoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   videoId               String?   @map("video_id") @db.Char(36)
-  tag                   Tag?      @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tags                  Tag?      @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   tagId                 String?   @map("tag_id") @db.Char(36)
   likes                 Like[]
   comments              Comment[]

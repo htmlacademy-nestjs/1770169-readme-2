@@ -1,11 +1,12 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BasePostgresRepository } from '@project/lib/core';
 import { createMessage } from '@project/lib/shared/helpers';
 import { PrismaClientService } from '@project/lib/publications/models';
 import { Post, PostStatus } from '@project/lib/shared/app/types';
 import { PostEntity } from './post.entity';
-import { ErrorMessage } from './post.constant';
+import { NOT_FOUND_BY_ID_MESSAGE } from './post.constant';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
@@ -36,20 +37,19 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
         quote: true,
         text: true,
         video: true,
-        tag: true
+        tags: true
       }
     })
 
     if(!record) {
-      throw new ConflictException(createMessage(ErrorMessage.NOT_FOUND_BY_ID_MESSAGE, [id]));
+      throw new NotFoundException(createMessage(NOT_FOUND_BY_ID_MESSAGE, [id]));
     }
 
-    return this.createEntityFromDocument({
-      ...record,
+    return this.createEntityFromDocument(Object.assign({
+      tags: record.tags,
       commentCount: record.comments.length,
-      likeCount: record.likes.length,
-      tags: record.tag
-    });
+      likeCount: record.likes.length
+    }, record));
   }
 
   public async findByDraftStatus({sort, count}) {
@@ -74,30 +74,29 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
         quote: true,
         text: true,
         video: true,
-        tag: true
+        tags: true
       },
       orderBy: {
         publishedDate: sort
       }
     });
 
-    return records.map((record) => this.createEntityFromDocument({
-      ...record,
-      tags: record.tag,
+    return records.map((record) => this.createEntityFromDocument(Object.assign({
+      tags: record.tags,
       commentCount: record.comments.length,
       likeCount: record.likes.length
-    }));
+    }, record)));
   }
 
   public async find({type, tagName, userId, sort, count}): Promise<PostEntity[]> {
     const records = await this.prismaClient.publication.findMany({
       where: {
-        userId: userId,
-        type: type,
+        userId: userId ?? Prisma.skip,
+        type: type ?? Prisma.skip,
         status: PostStatus.Published,
-        tag: {
+        tags: !tagName ? Prisma.skip : {
           tags: {
-            hasEvery: [tagName]
+            hasEvery: [`#${tagName}`]
           }
         }
       },
@@ -118,19 +117,18 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
         quote: true,
         text: true,
         video: true,
-        tag: true
+        tags: true
       },
       orderBy: {
         publishedDate: sort
       }
     });
 
-    return records.map((record) => this.createEntityFromDocument({
-      ...record,
-      tags: record.tag,
+    return records.map((record) => this.createEntityFromDocument(Object.assign({
+      tags: record.tags,
       commentCount: record.comments.length,
       likeCount: record.likes.length
-    }));
+    }, record)));
   }
 
   public async save(entity: PostEntity): Promise<PostEntity> {
@@ -139,14 +137,14 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
         type: entity.type,
         status: entity.status,
         userId: entity.userId,
-        publishedDate: entity.publishedDate,
-        repost: entity.repost,
-        originalUserId: entity.originalUserId,
-        originalPublicationId: entity.originalPublicationId,
+        publishedDate: entity.publishedDate ?? Prisma.skip,
+        repost: entity.repost ?? Prisma.skip,
+        originalUserId: entity.originalUserId ?? Prisma.skip,
+        originalPublicationId: entity.originalPublicationId ?? Prisma.skip,
         [entity.type]: {
           connect: {id: entity[entity.type].id}
         },
-        tag: entity.tags && {
+        tags: !entity.tags ? Prisma.skip : {
           connect: {id: entity.tags.id}
         }
       }
@@ -164,9 +162,27 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
       data: {
         status: entity.status,
         publishedDate: entity.publishedDate,
-        tag: entity.tags && {
+        tags: !entity.tags ? Prisma.skip : {
           connect: {id: entity.tags.id}
         }
+      },
+      include: {
+        comments: {
+          select: {
+            id: true
+          }
+        },
+        likes: {
+          select: {
+            id: true
+          }
+        },
+        link: true,
+        photo: true,
+        quote: true,
+        text: true,
+        video: true,
+        tags: true
       }
     });
 

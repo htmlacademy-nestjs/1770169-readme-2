@@ -2,8 +2,21 @@ import { SortType } from '@project/lib/shared/app/types';
 
 export const DEFAULT_MAX_POST_COUNT = 25;
 export const DEFAULT_SORT_TYPE = SortType.Desc;
-export const NOT_FOUND_BY_ID_MESSAGE = 'The post with this id: %id% not found.';
+export const NOT_FOUND_BY_ID_MESSAGE = 'The publication with this id: %id% not found.';
 export const REPOST_ERROR_MESSAGE = 'Allowed to repost the publication can be done once';
+
+export const POST_CREATED_RESPONSE = 'The publication was successfully created.';
+export const POST_REPOSTED_RESPONSE = 'The publication was successfully reposted.';
+export const POSTS_FOUND_RESPONSE = 'The publications were successfully found.';
+export const POST_FOUND_RESPONSE = 'The publication were successfully found.';
+export const POST_UPDATE_RESPONSE = 'The publication was successfully update.';
+export const POST_DELETE_RESPONSE = 'The publication was successfully deleted.';
+export const POST_NOT_FOUND_RESPONSE = 'The publication with this id not found.'
+export const VALIDATION_RESPONSE = 'Validation error.';
+export const NOT_AUTHORIZED_RESPONSE = 'The user is not logged in.';
+
+export const ROUTE_PREFIX = 'posts';
+export const TAG = 'Publications';
 
 export const TypeProperty = {
   DESCRIPTION: 'The type of blog post is one of five types: video, text, quote, photo, link.',
@@ -63,4 +76,11 @@ export const TagsProperty = {
 export const PublishedDateProperty = {
   DESCRIPTION: 'The publication publication date.',
   EXAMPLE: '2022-01-18T17:36:34.064Z'
+}
+
+export enum Route {
+  Root = '/',
+  PostParam = ':id',
+  Draft = 'draft',
+  Repost = ':id/repost'
 }

@@ -4,6 +4,7 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  HttpCode,
   HttpStatus,
   Param,
   ParseIntPipe,
@@ -68,7 +69,7 @@ export class CommentController {
   }
 
   @ApiResponse({
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     description: COMMENT_DELETE_RESPONSE
   })
   @ApiResponse({
@@ -76,6 +77,7 @@ export class CommentController {
     description: NOT_AUTHORIZED_RESPONSE
   })
   @Delete(Route.CommentParam)
+  @HttpCode(204)
   public async destroy(@Param('id') id: string) {
     await this.commentService.deleteCommentById(id);
   }
