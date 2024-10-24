@@ -125,7 +125,7 @@ export class PostService {
       return this.postRepository.update(existsPost.id, existsPost);
     }
 
-    existsPost.tags.populate(tags.toObject())
+    existsPost.tags.populate(tags.toObject());
 
     return existsPost;
   }
