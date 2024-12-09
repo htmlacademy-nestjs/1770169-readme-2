@@ -1,3 +1,5 @@
+export const MAX_DESCRIPTION_LENGTH = 300;
+
 export const NOT_FOUND_BY_ID_MESSAGE = 'The link post with this id: %id% not found.';
 
 export const URLProperty = {

@@ -1,4 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+
+import { IsMongoId, IsNotEmpty } from 'class-validator';
+
 import { UserIdProperty } from '../like.constant';
 
 export class LikeDTO {
@@ -6,5 +9,7 @@ export class LikeDTO {
     description: UserIdProperty.DESCRIPTION,
     example: UserIdProperty.EXAMPLE
   })
+  @IsMongoId()
+  @IsNotEmpty()
   public userId: string;
 }

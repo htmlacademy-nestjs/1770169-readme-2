@@ -63,6 +63,16 @@ export const SubscribeCountProperty = {
   EXAMPLE: '1'
 }
 
+export const PasswordLength = {
+  MIN: 6,
+  MAX: 12
+}
+
+export const FullNameLength = {
+  MIN: 3,
+  MAX: 50
+}
+
 export enum Route {
   Registration = 'sign-up',
   Authentication = 'sign-in',

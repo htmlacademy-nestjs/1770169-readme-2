@@ -3,7 +3,7 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 import { NestFactory } from '@nestjs/core';
 
@@ -21,7 +21,7 @@ async function bootstrap() {
   const hostname = configService.get<string>('app.host');
   createSwagger(app);
   app.setGlobalPrefix(globalPrefix);
-  app.useGlobalPipes();
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://${hostname}:${port}/${globalPrefix}`);

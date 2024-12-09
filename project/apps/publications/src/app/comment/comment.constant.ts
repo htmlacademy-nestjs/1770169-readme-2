@@ -29,6 +29,11 @@ export const CreatedAtProperty = {
   EXAMPLE: '2022-01-18T17:36:34.064Z'
 }
 
+export const CommentLength = {
+  MIN: 10,
+  MAX: 300
+}
+
 export enum Route {
   Root = '/',
   CommentParam = ':id',
