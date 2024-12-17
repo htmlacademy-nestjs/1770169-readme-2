@@ -2,22 +2,28 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { IsNotEmpty, IsString, IsUrl, MaxLength } from 'class-validator';
 
-import { DescriptionProperty, MAX_DESCRIPTION_LENGTH, URLProperty } from '../link-post.constant';
+import {
+  DescriptionProperty,
+  DescriptionValidationMessage,
+  MAX_DESCRIPTION_LENGTH,
+  URLProperty,
+  URLValidationMessage
+} from '../link-post.constant';
 
 export class CreateLinkPostDTO {
   @ApiProperty({
     description: URLProperty.DESCRIPTION,
     example: URLProperty.EXAMPLE
   })
-  @IsUrl()
-  @IsNotEmpty()
+  @IsUrl({}, {message: URLValidationMessage.TYPE})
+  @IsNotEmpty({message: URLValidationMessage.REQUIRED})
   public url: string;
 
   @ApiProperty({
     description: DescriptionProperty.DESCRIPTION,
     example: DescriptionProperty.EXAMPLE
   })
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_LENGTH, {message: 'Длина должна быть не более 300 символов.'})
+  @IsString({message: DescriptionValidationMessage.TYPE})
+  @MaxLength(MAX_DESCRIPTION_LENGTH, {message: DescriptionValidationMessage.LENGTH})
   public description: string;
 }

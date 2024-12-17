@@ -2,14 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { IsMongoId, IsNotEmpty } from 'class-validator';
 
-import { UserIdProperty } from '../like.constant';
+import { UserIdProperty, UserIdValidationMessage } from '../like.constant';
 
 export class LikeDTO {
   @ApiProperty({
     description: UserIdProperty.DESCRIPTION,
     example: UserIdProperty.EXAMPLE
   })
-  @IsMongoId()
-  @IsNotEmpty()
+  @IsMongoId({message: UserIdValidationMessage.TYPE})
+  @IsNotEmpty({message: UserIdValidationMessage.REQUIRED})
   public userId: string;
 }

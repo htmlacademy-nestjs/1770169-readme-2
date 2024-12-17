@@ -11,6 +11,11 @@ export const UserIdProperty = {
   EXAMPLE: '667c673deb3171fbdaa4ce26'
 }
 
+export const UserIdValidationMessage = {
+  TYPE: 'The Id must be of the MongoId type',
+  REQUIRED: 'The field should not be empty'
+}
+
 export enum Route {
   Root = '/',
 }

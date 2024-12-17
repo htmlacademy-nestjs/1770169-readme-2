@@ -29,6 +29,17 @@ export const CreatedAtProperty = {
   EXAMPLE: '2022-01-18T17:36:34.064Z'
 }
 
+export const ContentValidationMessage = {
+  TYPE: 'The field must be a string',
+  LENGTH: 'The length should be from 10 to 300 characters',
+  REQUIRED: 'The field should not be empty'
+}
+
+export const UserIdValidationMessage = {
+  TYPE: 'The Id must be of the MongoId type',
+  REQUIRED: 'The field should not be empty'
+}
+
 export const CommentLength = {
   MIN: 10,
   MAX: 300
