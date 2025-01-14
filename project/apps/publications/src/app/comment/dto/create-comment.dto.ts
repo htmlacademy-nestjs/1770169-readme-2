@@ -4,10 +4,12 @@ import { IsMongoId, IsNotEmpty, IsString, Length } from 'class-validator';
 
 import {
   CommentLength,
+  CONTENT_LENGTH_MESSAGE,
+  CONTENT_TYPE_MESSAGE,
   ContentProperty,
-  ContentValidationMessage,
+  REQUIRED_MESSAGE,
+  USER_ID_TYPE_MESSAGE,
   UserIdProperty,
-  UserIdValidationMessage
 } from '../comment.constant';
 
 export class CreateCommentDTO {
@@ -15,16 +17,16 @@ export class CreateCommentDTO {
     description: ContentProperty.DESCRIPTION,
     example: ContentProperty.EXAMPLE
   })
-  @IsString({message: ContentValidationMessage.TYPE})
-  @Length(CommentLength.MIN, CommentLength.MAX, {message: ContentValidationMessage.LENGTH})
-  @IsNotEmpty({message: ContentValidationMessage.REQUIRED})
+  @IsString({message: CONTENT_TYPE_MESSAGE})
+  @Length(CommentLength.MIN, CommentLength.MAX, {message: CONTENT_LENGTH_MESSAGE})
+  @IsNotEmpty({message: REQUIRED_MESSAGE})
   public content: string;
 
   @ApiProperty({
     description: UserIdProperty.DESCRIPTION,
     example: UserIdProperty.EXAMPLE
   })
-  @IsMongoId({message: UserIdValidationMessage.TYPE})
-  @IsNotEmpty({message: UserIdValidationMessage.REQUIRED})
+  @IsMongoId({message: USER_ID_TYPE_MESSAGE})
+  @IsNotEmpty({message: REQUIRED_MESSAGE})
   public userId: string;
 }

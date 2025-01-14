@@ -12,3 +12,6 @@ export * from './lib/timestamps.interface';
 export * from './lib/post.enum';
 export * from './lib/sort-type.enum';
 export * from './lib/like.interface';
+export * from './lib/pagination.interface';
+export * from './lib/token.interface';
+export * from './lib/token-payload.interface';
