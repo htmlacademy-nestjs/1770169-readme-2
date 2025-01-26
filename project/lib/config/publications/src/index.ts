@@ -1,2 +1,2 @@
 export * from './lib/config-publications.module';
-export { default as appConfig } from './lib/app/app.config';
+export { default as appConfig } from './lib/app/publications-app.config';

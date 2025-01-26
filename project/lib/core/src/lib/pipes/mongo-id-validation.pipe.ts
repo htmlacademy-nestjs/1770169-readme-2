@@ -1,17 +1,23 @@
-import { ArgumentMetadata, BadRequestException, PipeTransform } from '@nestjs/common';
+import {
+  ArgumentMetadata,
+  BadRequestException,
+  Injectable,
+  PipeTransform
+} from '@nestjs/common';
 
 import { Types } from 'mongoose';
 
-import { MONGO_ID_VALIDATION_ERROR, WRONG_DATA_TYPE } from './pipes.constant';
+import { BAD_MONGO_ID_ERROR, ParamType, PIPE_USE_ERROR } from './pipes.constant';
 
+@Injectable()
 export class MongoIdValidationPipe implements PipeTransform {
-  public transform(value: string, metadata: ArgumentMetadata) {
-    if (metadata.type !== 'param') {
-      throw new Error(WRONG_DATA_TYPE);
+  public transform(value: string, { type }: ArgumentMetadata) {
+    if (type !== ParamType.Param) {
+      throw new Error(PIPE_USE_ERROR)
     }
 
     if (!Types.ObjectId.isValid(value)) {
-      throw new BadRequestException(MONGO_ID_VALIDATION_ERROR);
+      throw new BadRequestException(BAD_MONGO_ID_ERROR);
     }
 
     return value;

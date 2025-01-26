@@ -15,8 +15,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   const configService = app.get(ConfigService);
-  const port = configService.get<string>('app.port');
-  const hostname = configService.get<string>('app.host');
+  const port = configService.get<string>('publicationsApp.port');
+  const hostname = configService.get<string>('publicationsApp.host');
   createSwagger(app);
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(new ValidationPipe());
