@@ -12,15 +12,12 @@ export const SUCCESSFUL_AUTHORIZATION_RESPONSE = 'The user successfully logged i
 export const AUTHENTICATION_ERROR_RESPONSE = 'The wrong email or password was entered.';
 export const NOT_FOUND_BY_ID_RESPONSE = 'The user with this id not found.';
 
-export const SIZE_MESSAGE = 'The maximum photo size should be 1 megabyte.';
-export const FORMAT_MESSAGE = 'The photo format should be jpg or png.';
 export const FIELD_TYPE_MESSAGE = 'The field must be a string.';
 export const EMAIL_TYPE_MESSAGE = 'The field must be a email type.';
 export const PASSWORD_LENGTH_MESSAGE = 'The length should be from 6 to 12 characters.';
 export const FULL_NAME_LENGTH_MESSAGE = 'The length should be from 3 to 50 characters.';
 export const REQUIRED_MESSAGE = 'The field should not be empty.';
 
-export const MAX_SIZE = 1E6;
 export const ROUTE_PREFIX = 'user';
 export const TAG = 'User';
 
@@ -88,9 +85,4 @@ export enum Route {
   Registration = 'sign-up',
   Authentication = 'sign-in',
   UserParam = ':id',
-}
-
-export enum ImageFormat {
-  JPEG = 'image/jpeg',
-  PNG = 'image/png'
 }

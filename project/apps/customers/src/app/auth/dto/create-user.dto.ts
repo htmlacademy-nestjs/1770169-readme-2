@@ -2,24 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { IsEmail, IsString, IsNotEmpty, Length, IsOptional  } from 'class-validator';
 
-import { HasMimeType, MaxFileSize } from 'nestjs-form-data';
-
 import {
   AvatarProperty,
   EMAIL_TYPE_MESSAGE,
   EmailProperty,
   FIELD_TYPE_MESSAGE,
-  FORMAT_MESSAGE,
   FULL_NAME_LENGTH_MESSAGE,
   FullNameLength,
   FullNameProperty,
-  ImageFormat,
-  MAX_SIZE,
   PASSWORD_LENGTH_MESSAGE,
   PasswordLength,
   PasswordProperty,
-  REQUIRED_MESSAGE,
-  SIZE_MESSAGE
+  REQUIRED_MESSAGE
 } from '../auth.constant';
 
 export class CreateUserDTO {
@@ -54,8 +48,6 @@ export class CreateUserDTO {
     example: AvatarProperty.EXAMPLE
   })
   @IsString({message: FIELD_TYPE_MESSAGE})
-  @MaxFileSize(MAX_SIZE, {message: SIZE_MESSAGE})
-  @HasMimeType([ImageFormat.JPEG, ImageFormat.PNG], {message: FORMAT_MESSAGE})
   @IsOptional()
   public avatar?: string;
 }

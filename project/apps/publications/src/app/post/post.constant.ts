@@ -1,6 +1,8 @@
 import { SortType } from '@project/lib/shared/app/types';
 
 export const DEFAULT_MAX_POST_COUNT = 25;
+export const DEFAULT_PAGE_COUNT = 1;
+export const MAX_POST_COUNT_SEARCH = 20;
 export const DEFAULT_SORT_TYPE = SortType.Desc;
 export const NOT_FOUND_BY_ID_MESSAGE = 'The publication with this id: %id% not found.';
 export const REPOST_ERROR_MESSAGE = 'Allowed to repost the publication can be done once';
@@ -88,7 +90,8 @@ export enum Route {
   Root = '/',
   PostParam = ':id',
   Draft = 'draft',
-  Repost = ':id/repost'
+  Repost = ':id/repost',
+  Search = 'search'
 }
 
 export const CommentLength = {

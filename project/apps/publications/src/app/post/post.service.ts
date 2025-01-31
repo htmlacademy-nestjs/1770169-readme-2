@@ -138,4 +138,8 @@ export class PostService {
       throw new ConflictException(createMessage(NOT_FOUND_BY_ID_MESSAGE, [id]));
     }
   }
+
+  public async searchPostByTittle(searchParams: string) {
+    return this.postRepository.search(searchParams);
+  }
 }

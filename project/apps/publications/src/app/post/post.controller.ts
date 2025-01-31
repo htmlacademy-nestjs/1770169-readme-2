@@ -95,8 +95,8 @@ export class PostController {
     description: NOT_AUTHORIZED_RESPONSE
   })
   @Get(Route.Draft)
-  public async getDrafts(@Query() query: PostQuery) {
-    const posts = await this.postService.getPostsByDraftStatus(query.sortByUserId);
+  public async getDrafts() {
+    const posts = await this.postService.getPostsByDraftStatus('66e87f4f646c29eff76565a8');
 
     return fillDto(PostRDO, posts.map((post) => post.toObject()), {exposeDefaultValues: false});
   }
@@ -146,5 +146,16 @@ export class PostController {
   @HttpCode(204)
   public async delete(@Param('id') id: string) {
     await this.postService.deletePostById(id);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: POSTS_FOUND_RESPONSE
+  })
+  @Post(Route.PostParam)
+  public async search(@Query('title') title: string) {
+    const posts = await this.postService.searchPostByTittle(title);
+
+    return fillDto(PostRDO, posts.map((post) => post.toObject()), {exposeDefaultValues: false});
   }
 }

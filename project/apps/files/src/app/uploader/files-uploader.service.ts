@@ -15,11 +15,12 @@ import { extension } from 'mime-types';
 
 import { filesAppConfig } from '@project/lib/config/files';
 import { createMessage } from '@project/lib/shared/helpers';
-import { StoredFile } from '@project/lib/shared/app/types';
+import { StoredFile, UploadCatalog } from '@project/lib/shared/app/types';
 
 import { FilesEntity } from './files.entity';
 import { DATE_FORMAT, FILE_WRITE_ERROR, NOT_FOUND_BY_ID_MESSAGE } from './files-uploader.constant';
 import { FilesUploaderRepository } from './files-uploader.repository';
+import { UploadFile } from './files-uploader.interface';
 
 @Injectable()
 export class FilesUploaderService {
@@ -31,23 +32,24 @@ export class FilesUploaderService {
     public readonly filesUploaderRepository: FilesUploaderRepository
   ) {}
 
-  public async writeFile(file: Express.Multer.File): Promise<StoredFile> {
+  public async writeFile(file: UploadFile, catalog: UploadCatalog): Promise<StoredFile> {
     try {
       const [year, month] = dayjs().format(DATE_FORMAT).split(' ');
-      const fileExtension = extension(file.mimetype);
+      const fileExtension = extension(file[catalog][0].mimetype);
       const filename = `${randomUUID()}.${fileExtension}`;
-      const subDirectory = join(year, month);
+      const subDirectory = join(catalog, year, month);
       const uploadDirectory = join(this.config.uploadDirectory, subDirectory);
       const path = join(uploadDirectory, filename);
 
       await ensureDir(uploadDirectory);
-      await writeFile(path, file.buffer);
+      await writeFile(path, file[catalog][0].buffer);
 
       return {
         fileExtension,
         filename,
         path,
         subDirectory,
+        catalog
       };
     } catch (error) {
       this.logger.error(createMessage(FILE_WRITE_ERROR, [error.message]));
@@ -55,15 +57,17 @@ export class FilesUploaderService {
     }
   }
 
-  public async saveFile(file: Express.Multer.File): Promise<FilesEntity> {
-    const recordedFile = await this.writeFile(file);
+  public async saveFile(file: UploadFile): Promise<FilesEntity> {
+    const catalog = Object.keys(file)[0] as UploadCatalog;
+    const recordedFile = await this.writeFile(file, catalog);
     const fileEntity = FilesEntity.fromObject({
       hashName: recordedFile.filename,
-      mimetype: file.mimetype,
-      originalName: file.originalname,
+      mimetype: file[catalog][0].mimetype,
+      originalName: file[catalog][0].originalname,
       path: recordedFile.path,
-      size: file.size,
+      size: file[catalog][0].size,
       subDirectory: recordedFile.subDirectory,
+      catalog: recordedFile.catalog
     });
 
     return this.filesUploaderRepository.save(fileEntity);

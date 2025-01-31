@@ -17,3 +17,4 @@ export * from './lib/token.interface';
 export * from './lib/token-payload.interface';
 export * from './lib/file.interface';
 export * from './lib/stored-file.interface';
+export * from './lib/upload-catalog.enum';

@@ -4,6 +4,7 @@ export interface File extends Timestamps {
   id?: string;
   originalName: string;
   subDirectory: string;
+  catalog: string;
   size: number;
   mimetype: string;
   hashName: string;

@@ -5,6 +5,7 @@ export class FilesEntity implements File, Entity<string> {
   public id?: string;
   public originalName: string;
   public subDirectory: string;
+  public catalog: string;
   public size: number;
   public mimetype: string;
   public hashName: string;
@@ -21,6 +22,7 @@ export class FilesEntity implements File, Entity<string> {
       id: this.id,
       originalName: this.originalName,
       subDirectory: this.subDirectory,
+      catalog: this.catalog,
       size: this.size,
       mimetype: this.mimetype,
       hashName: this.hashName,
@@ -38,6 +40,7 @@ export class FilesEntity implements File, Entity<string> {
     this.id = file.id;
     this.originalName = file.originalName;
     this.subDirectory = file.subDirectory;
+    this.catalog = file.catalog,
     this.size = file.size;
     this.mimetype = file.mimetype;
     this.hashName = file.hashName;

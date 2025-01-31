@@ -34,7 +34,7 @@ export class PostTagsEntity implements PostTags, Entity<string, PostTags> {
 
   static fromDto(dto: CreatePostTagDTO) {
     const entity = new PostTagsEntity();
-    this.validationTag(entity.tags);
+    this.validationTag(dto.tags);
     entity.tags = this.toUniqueArray(dto.tags).map((tag) => tag.toLowerCase());
 
     return entity;

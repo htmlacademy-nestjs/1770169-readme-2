@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { BasePostgresRepository } from '@project/lib/core';
-import { createMessage } from '@project/lib/shared/helpers';
-import { PrismaClientService } from '@project/lib/publications/models';
-import { Pagination, Post } from '@project/lib/shared/app/types';
-import { PostEntity } from './post.entity';
-import { NOT_FOUND_BY_ID_MESSAGE } from './post.constant';
 import { PostStatus, Prisma } from '@prisma/client';
+
+import { BasePostgresRepository } from '@project/lib/core';
+import { PrismaClientService } from '@project/lib/publications/models';
+import { createMessage } from '@project/lib/shared/helpers';
+import { Pagination, Post } from '@project/lib/shared/app/types';
+
+import { PostEntity } from './post.entity';
+import { MAX_POST_COUNT_SEARCH, NOT_FOUND_BY_ID_MESSAGE } from './post.constant';
 import { PostQuery } from './query/post.query';
 
 @Injectable()
@@ -26,26 +28,32 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   }
 
   public async find(query: PostQuery): Promise<Pagination<PostEntity>> {
-    const skip = query?.currentPage && query?.takePostsCount ?
-      (query.currentPage - 1) * query.takePostsCount :
+    const skip = query?.page && query?.count ?
+      (query.page - 1) * query.count :
       Prisma.skip;
-    const take = query?.takePostsCount;
-    const orderBy: Prisma.PublicationOrderByWithRelationInput = {
-      publishedDate: query?.sortByDate,
-      comments: {
-        _count: query?.sortByRating
+    const take = query?.count;
+    const orderBy: Prisma.PublicationOrderByWithRelationInput[] = [
+      {
+        publishedDate: query?.orderDate
       },
-      likes: {
-        _count: query?.sortByLikes
+      {
+        comments: {
+          _count: query?.orderRating
+        }
+      },
+      {
+        likes: {
+          _count: query?.orderLikes
+        }
       }
-    };
+    ];
     const where: Prisma.PublicationWhereInput = {
-      userId: query?.sortByUserId ?? Prisma.skip,
-      type: query?.sortByPostType ?? Prisma.skip,
+      userId: query?.orderUser ?? Prisma.skip,
+      type: query?.orderType ?? Prisma.skip,
       status: PostStatus.published,
-      tags: query?.sortByTagName ? {
+      tags: query?.orderTag ? {
         tags: {
-          hasEvery: [query.sortByTagName]
+          hasEvery: [query.orderTag]
         }
       } :
       Prisma.skip
@@ -77,7 +85,7 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
         commentCount: record._count.comments,
         likeCount: record._count.likes
       }, record))),
-      currentPage: query?.currentPage,
+      currentPage: query?.page,
       totalPages: this.calculatePostsPage(postCount, take),
       itemsPerPage: take,
       totalItems: postCount,
@@ -203,5 +211,41 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
         id
       }
     })
+  }
+
+  public async search(searchParams: string): Promise<PostEntity[]> {
+    const records = await this.prismaClient.publication.findMany({
+      where: {
+        status: PostStatus.published,
+        OR: [
+          {
+            video: {
+              title: {
+                contains: searchParams,
+                mode: 'insensitive'
+              }
+            }
+          },
+          {
+            text: {
+              title: {
+                contains: searchParams,
+                mode: 'insensitive'
+              }
+            }
+          }
+        ]
+      },
+      take: MAX_POST_COUNT_SEARCH,
+      include: {
+        video: true,
+        text: true,
+        tags: true
+      }
+    })
+
+    return records.map((record) => this.createEntityFromDocument(Object.assign({
+      tags: record.tags
+    }, record)));
   }
 }

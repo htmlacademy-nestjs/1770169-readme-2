@@ -2,40 +2,40 @@ import { PostType } from '@prisma/client';
 import { SortType } from '@project/lib/shared/app/types';
 import { IsEnum, IsIn, IsMongoId, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { DEFAULT_MAX_POST_COUNT } from '../post.constant';
+import { DEFAULT_MAX_POST_COUNT, DEFAULT_PAGE_COUNT } from '../post.constant';
 
 export class PostQuery {
   @IsMongoId()
   @IsOptional()
-  public sortByUserId?: string;
+  public orderUser?: string;
 
   @IsEnum(PostType)
   @IsOptional()
-  public sortByPostType?: PostType;
+  public orderType?: PostType;
 
   @IsString()
   @IsOptional()
-  public sortByTagName?: string;
+  public orderTag?: string;
 
   @IsIn(Object.values(SortType))
   @IsOptional()
-  public sortByDate: SortType = SortType.Desc;
+  public orderDate: SortType = SortType.Desc;
 
   @IsIn(Object.values(SortType))
   @IsOptional()
-  public sortByLikes: SortType = SortType.Desc;
+  public orderLikes: SortType = SortType.Desc;
 
   @IsIn(Object.values(SortType))
   @IsOptional()
-  public sortByRating: SortType = SortType.Desc;
+  public orderRating: SortType = SortType.Desc;
 
   @Transform(({value}) => +value || DEFAULT_MAX_POST_COUNT)
   @IsNumber()
   @IsOptional()
-  public takePostsCount: number;
+  public count: number = DEFAULT_MAX_POST_COUNT;
 
-  @Transform(({value}) => +value)
+  @Transform(({value}) => +value || DEFAULT_PAGE_COUNT)
   @IsNumber()
   @IsOptional()
-  public currentPage: number;
+  public page: number = DEFAULT_PAGE_COUNT;
 }

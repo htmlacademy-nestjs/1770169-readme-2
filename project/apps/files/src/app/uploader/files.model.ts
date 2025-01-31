@@ -26,6 +26,11 @@ export class FilesModel extends Document implements File {
   @Prop({
     required: true
   })
+  public catalog: string;
+
+  @Prop({
+    required: true
+  })
   public size: number;
 
   @Prop({

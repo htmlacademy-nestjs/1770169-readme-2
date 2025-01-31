@@ -19,7 +19,9 @@ async function bootstrap() {
   const hostname = configService.get<string>('publicationsApp.host');
   createSwagger(app);
   app.setGlobalPrefix(globalPrefix);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true
+  }));
 
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://${hostname}:${port}/${globalPrefix}`);
