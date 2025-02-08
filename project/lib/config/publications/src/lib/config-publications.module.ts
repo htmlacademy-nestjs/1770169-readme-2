@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { ENV_FILE_PATH } from './publications.constant';
-import appConfig from './app/app.config';
+import appConfig from './app/publications-app.config';
 
 @Module({
   imports: [
