@@ -1,7 +1,6 @@
 import {
-  HttpException,
-  HttpStatus,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   UnauthorizedException
@@ -77,10 +76,8 @@ export class AuthService {
 
   public async createToken(user: User): Promise<Token> {
     const payload: TokenPayload = {
+      id: user.id,
       email: user.email,
-      fullName: user.fullName,
-      avatar: user.avatar,
-      createdAt: user.createdAt
     }
 
     try {
@@ -88,7 +85,7 @@ export class AuthService {
       return {accessToken};
     } catch (error) {
       this.logger.error(createMessage(TOKEN_GENERATE_ERROR, [error.message]));
-      throw new HttpException(TOKEN_CREATION_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new InternalServerErrorException(TOKEN_CREATION_ERROR);
     }
   }
 }
