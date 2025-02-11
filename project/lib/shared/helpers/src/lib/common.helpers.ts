@@ -21,3 +21,7 @@ export function createMessage<T>(message: string, expressions: T[] = []): string
 export function getMongoConnectionString({host, port, database, username, userPassword, authSource}): string {
   return `mongodb://${username}:${userPassword}@${host}:${port}/${database}?authSource=${authSource}`;
 }
+
+export function getRabbitMQConnectionString({user, password, host, port}): string {
+  return `amqp://${user}:${password}@${host}:${port}`;
+}
