@@ -9,14 +9,14 @@ services:
       - ${FAKE_SMTP_UI_PORT}:8080
 
   rabbitmq:
-    image: rabbitmq:4.1-rc-management⁠
+    image: rabbitmq:4.0.5-management
     container_name: readme_rabbitmq
     ports:
-      - ${RABBITMQ_PORT}:15672
-      - ${RABBITMQ_MANAGEMENT_PORT}:5672
+      - ${RABBITMQ_MANAGEMENT_PORT}:15672
+      - ${RABBITMQ_PORT}:5672
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 10s
@@ -52,7 +52,7 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_DB_USER_PASSWORD}
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_DB_USERNAME}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_DB_USER_PASSWORD}
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_DB_USERNAME}:${MONGO_DB_USER_PASSWORD}@mongo_notifications_ui:${MONGO_DB_PORT}/
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_DB_USERNAME}:${MONGO_DB_USER_PASSWORD}@mongo_notifications:${MONGO_DB_PORT}/
 
 volumes:
    mongo_notifications_data:

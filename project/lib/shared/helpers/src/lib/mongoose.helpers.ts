@@ -1,7 +1,46 @@
-import { ConfigService } from '@nestjs/config';
+import * as Joi from 'joi';
 
+import { ConfigService } from '@nestjs/config';
 import { MongooseModuleAsyncOptions } from '@nestjs/mongoose';
-import { getMongoConnectionString } from './common.helpers';
+
+import { MongooseConfig } from '@project/lib/shared/app/types';
+
+import { createMessage, getMongoConnectionString } from './common.helpers';
+
+const DEFAULT_MONGO_PORT = 27017;
+const VALIDATE_ERROR_MESSAGE = '[Mongo Config Validation Error]: %message%.';
+
+
+const mongooseSchema = Joi.object({
+  name: Joi.string().required(),
+  host: Joi.string().hostname().required(),
+  username: Joi.string().required(),
+  userPassword: Joi.string().required(),
+  port: Joi.number().port().required(),
+  authSource: Joi.string().required()
+});
+
+function validateConfig(config: MongooseConfig): void {
+  const { error } = mongooseSchema.validate(config, { abortEarly: true });
+
+  if(error) {
+    throw new Error(createMessage(VALIDATE_ERROR_MESSAGE, [error.message]));
+  }
+}
+
+export function getMongooseConfig(): MongooseConfig {
+  const config: MongooseConfig = {
+    name: process.env.MONGO_DB_NAME,
+    host: process.env.MONGO_DB_HOST,
+    username: process.env.MONGO_DB_USERNAME,
+    userPassword: process.env.MONGO_DB_USER_PASSWORD,
+    port: parseInt(process.env.MONGO_DB_PORT, 10) || DEFAULT_MONGO_PORT,
+    authSource: process.env.MONGO_AUTH_SOURCE
+  };
+  validateConfig(config);
+
+  return config;
+}
 
 export function getMongooseOptions(optionSpace: string): MongooseModuleAsyncOptions {
   return {
@@ -16,5 +55,5 @@ export function getMongooseOptions(optionSpace: string): MongooseModuleAsyncOpti
       })
     }),
     inject: [ConfigService]
-  }
+  };
 }

@@ -50,7 +50,8 @@ export abstract class BaseMongoRepository<
       entity.toObject(),
       {
         new: true,
-        runValidators: true
+        runValidators: true,
+        strict: false
       }).exec();
 
     if(!document) {

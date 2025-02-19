@@ -20,3 +20,7 @@ export * from './lib/stored-file.interface';
 export * from './lib/upload-catalog.enum';
 export * from './lib/subscriber.interface';
 export * from './lib/rabbit-routing';
+export * from './lib/rabbit-config';
+export * from './lib/mongoose-config';
+export * from './lib/app-config.interface';
+export * from './lib/environment.enum';

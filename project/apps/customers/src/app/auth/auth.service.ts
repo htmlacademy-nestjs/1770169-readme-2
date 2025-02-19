@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -42,7 +43,7 @@ export class AuthService {
     const existUser = await this.userRepository.findByEmail(dto.email);
 
     if(existUser) {
-      throw new NotFoundException(createMessage(USER_EXISTS_MESSAGE, [dto.email]));
+      throw new ConflictException(createMessage(USER_EXISTS_MESSAGE, [dto.email]));
     }
     const userEntity = await new UserEntity(user).setPassword(dto.password);
 

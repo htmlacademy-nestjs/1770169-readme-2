@@ -5,23 +5,23 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Subscriber } from '@project/lib/shared/app/types';
 
 @Schema({
-  collection: 'email-subscribers',
+  collection: 'publications-subscribers',
   timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 })
 
-export class EmailSubscriberModel extends Document implements Subscriber {
+export class PublicationsSubscriberModel extends Document implements Subscriber {
   @Prop({
     required: true
   })
   public email: string;
+  public lastNotification?: Date;
   public id?: string;
-
 }
 
-export const EmailSubscriberSchema = SchemaFactory.createForClass(EmailSubscriberModel);
+export const PublicationsSubscriberSchema = SchemaFactory.createForClass(PublicationsSubscriberModel);
 
-EmailSubscriberSchema.virtual('id').get(function() {
+PublicationsSubscriberSchema.virtual('id').get(function() {
   return this._id.toString();
 })

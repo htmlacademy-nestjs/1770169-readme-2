@@ -1,13 +1,19 @@
 import { Entity } from '@project/lib/core';
 import { Subscriber } from '@project/lib/shared/app/types';
 
-export class EmailSubscriberEntity implements Subscriber, Entity<string, Subscriber> {
+export class PublicationsSubscriberEntity implements Subscriber, Entity<string, Subscriber> {
   public id?: string;
   public email: string;
+  public lastNotification?: Date;
+
+  constructor(data: Subscriber) {
+    this.populate(data)
+  }
 
   public populate(data: Subscriber) {
     this.id = data.id ?? undefined;
     this.email = data.email;
+    this.lastNotification = data.lastNotification ?? undefined;
 
     return this;
   }
@@ -15,11 +21,12 @@ export class EmailSubscriberEntity implements Subscriber, Entity<string, Subscri
   public toObject() {
     return {
       id: this.id,
-      email: this.email
+      email: this.email,
+      lastNotification: this.lastNotification
     }
   }
 
   static fromObject(data: Subscriber) {
-    return new EmailSubscriberEntity().populate(data)
+    return new PublicationsSubscriberEntity(data);
   }
 }

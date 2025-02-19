@@ -3,10 +3,11 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { MailerService } from '@nestjs-modules/mailer';
 
-import { notificationsMailConfig } from '@project/lib/config/notifications';
-import { Subscriber } from '@project/lib/shared/app/types';
+import { NotificationsMailConfig } from '@project/lib/config/notifications';
+import { Post } from '@project/lib/shared/app/types';
 
-import { EMAIL_PUBLICATION_SUBJECT } from './mail.constant';
+
+import { EMAIL_PUBLICATION_SUBJECT, TEMPLATE_PATH } from './mail.constant';
 
 @Injectable()
 export class MailService {
@@ -14,17 +15,17 @@ export class MailService {
     private readonly mailerService: MailerService
   ) {}
 
-  @Inject(notificationsMailConfig.KEY)
-  private readonly notificationsMailConfig: ConfigType<typeof notificationsMailConfig>
+  @Inject(NotificationsMailConfig.KEY)
+  private readonly notificationsMailConfig: ConfigType<typeof NotificationsMailConfig>
 
-  public async sendNotifyNewPublication(subscriber: Subscriber) {
+  public async sendNotifyNewPublication(email: string, posts: Post[]) {
     await this.mailerService.sendMail({
       from: this.notificationsMailConfig.from,
-      to: subscriber.email,
+      to: email,
       subject: EMAIL_PUBLICATION_SUBJECT,
-      template: './add-publication',
+      template: TEMPLATE_PATH,
       context: {
-        title: 'Test'
+        posts
       }
     })
   }

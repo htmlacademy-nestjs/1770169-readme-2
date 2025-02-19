@@ -3,8 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 
 
 import { ENV_FILE_PATH } from './config-file.constant';
-import filesAppConfig from './app/files-app.config';
-import filesMongoConfig from './mongo/files-mongo.config';
+import FilesAppConfig from './app/files-app.config';
+import FilesMongoConfig from './mongo/files-mongo.config';
 
 
 
@@ -13,7 +13,7 @@ import filesMongoConfig from './mongo/files-mongo.config';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      load: [filesAppConfig, filesMongoConfig],
+      load: [FilesAppConfig, FilesMongoConfig],
       envFilePath: ENV_FILE_PATH
     })
   ],

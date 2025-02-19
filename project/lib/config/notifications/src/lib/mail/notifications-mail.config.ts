@@ -1,10 +1,10 @@
 import { createMessage } from '@project/lib/shared/helpers';
 import { notificationsMailValidationSchema } from './notifications-mail-validation.schema';
-import { NotificationsMailConfig } from './notifications-mail.interface';
+import { MailConfig } from './notifications-mail.interface';
 import { DEFAULT_SMTP_PORT, ErrorMessage } from './notifications-mail.constant';
 import { registerAs } from '@nestjs/config';
 
-function validationMailConfig(config: NotificationsMailConfig): void {
+function validationMailConfig(config: MailConfig): void {
   const { error } = notificationsMailValidationSchema.validate(config, { abortEarly: true });
 
   if (error) {
@@ -12,8 +12,8 @@ function validationMailConfig(config: NotificationsMailConfig): void {
   }
 }
 
-function getMailConfig(): NotificationsMailConfig {
-  const config: NotificationsMailConfig = {
+function getMailConfig(): MailConfig {
+  const config: MailConfig = {
     host: process.env.MAIL_SMTP_HOST,
     port: parseInt(process.env.MAIL_SMTP_PORT, 10) || DEFAULT_SMTP_PORT,
     user: process.env.MAIL_USER_NAME,
@@ -26,4 +26,4 @@ function getMailConfig(): NotificationsMailConfig {
   return config;
  }
 
-export default registerAs('mailConfig', getMailConfig);
+export default registerAs('notificationsMail', getMailConfig);

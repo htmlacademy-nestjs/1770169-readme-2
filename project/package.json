@@ -5,7 +5,7 @@
   "scripts": {},
   "private": true,
   "dependencies": {
-    "@golevelup/nestjs-rabbitmq": "5.7.0",
+    "@golevelup/nestjs-rabbitmq": "^4.1.0",
     "@nestjs-modules/mailer": "2.0.2",
     "@nestjs/common": "^10.0.2",
     "@nestjs/config": "3.2.3",

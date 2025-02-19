@@ -6,7 +6,9 @@ import { MailService } from './mail.service';
 import { getMailerAsyncOptions } from '@project/lib/shared/helpers';
 
 @Module({
-  imports: [MailerModule.forRootAsync(getMailerAsyncOptions('mailConfig'))],
+  imports: [
+    MailerModule.forRootAsync(getMailerAsyncOptions('notificationsMail'))
+  ],
   providers: [MailService],
   exports: [MailService]
 })
