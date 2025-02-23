@@ -9,7 +9,7 @@ import { RabbitRouting } from '@project/lib/shared/app/types';
 import { PublicationsSubscriberEntity } from './publications-subscriber.entity';
 import { PublicationsSubscriberRepository } from './publications-subscriber.repository';
 import { CreatePublicationsSubscriberDTO } from './dto/create-publications-subscriber.dto';
-import { PublicationsSubscribe } from './publications-subscriber.constants';
+import { PUBLICATIONS_SUBSCRIBE } from './publications-subscriber.constants';
 import { SendLastPublicationsDTO } from './dto/send-last-publications.dto';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class PublicationsSubscriberService {
       return existsSubscriber;
     }
 
-    this.publicationsSubscriberRepository
+    await this.publicationsSubscriberRepository
       .save(new PublicationsSubscriberEntity(dto));
   }
 
@@ -35,7 +35,7 @@ export class PublicationsSubscriberService {
     const subscriber = await this.publicationsSubscriberRepository.findEmail(dto.email);
 
     await this.rabbitClient.publish(
-      PublicationsSubscribe.EXCHANGE,
+      PUBLICATIONS_SUBSCRIBE.EXCHANGE,
       RabbitRouting.GetPublications,
       {email: dto.email, lastNotification: subscriber.lastNotification}
     );

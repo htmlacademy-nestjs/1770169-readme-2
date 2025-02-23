@@ -11,7 +11,7 @@ export function getMailerAsyncOptions(optionSpace: string): MailerAsyncOptions {
       transport: {
         host: config.get<string>(`${optionSpace}.host`),
         port: config.get<number>(`${optionSpace}.port`),
-        secure: false,
+        secure: config.get<boolean>(`${optionSpace}.secure`),
         auth: {
           user: config.get<string>(`${optionSpace}.user`),
           pass: config.get<string>(`${optionSpace}.password`)

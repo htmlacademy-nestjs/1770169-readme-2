@@ -6,9 +6,9 @@ import { MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 import { MongooseConfig } from '@project/lib/shared/app/types';
 
 import { createMessage, getMongoConnectionString } from './common.helpers';
+import { DEFAULT_MONGO_PORT, MONGO_VALIDATE_ERROR_MESSAGE } from './helpers.constant';
 
-const DEFAULT_MONGO_PORT = 27017;
-const VALIDATE_ERROR_MESSAGE = '[Mongo Config Validation Error]: %message%.';
+
 
 
 const mongooseSchema = Joi.object({
@@ -24,7 +24,7 @@ function validateConfig(config: MongooseConfig): void {
   const { error } = mongooseSchema.validate(config, { abortEarly: true });
 
   if(error) {
-    throw new Error(createMessage(VALIDATE_ERROR_MESSAGE, [error.message]));
+    throw new Error(createMessage(MONGO_VALIDATE_ERROR_MESSAGE, [error.message]));
   }
 }
 

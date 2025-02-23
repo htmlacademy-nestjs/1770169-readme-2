@@ -6,10 +6,11 @@ import { RabbitConfig } from '@project/lib/shared/app/types';
 import { createMessage } from '@project/lib/shared/helpers';
 
 import { getRabbitMQConnectionString } from './common.helpers';
-
-const DEFAULT_RABBITMQ_PORT = 8026;
-const VALIDATE_ERROR_MESSAGE = '[RabbitMQ Config Validation Error]: %message%.';
-const TYPE_EXCHANGE = 'direct';
+import {
+  RABBITMQ_DEFAULT_PORT,
+  RABBITMQ_VALIDATE_ERROR_MESSAGE,
+  TYPE_EXCHANGE
+} from './helpers.constant';
 
 const rabbitWQSchema = Joi.object({
   host: Joi.string().valid().hostname().required(),
@@ -25,7 +26,7 @@ function validateConfig(config: RabbitConfig): void {
   const { error } = rabbitWQSchema.validate(config, { abortEarly: true });
 
   if(error) {
-    throw new Error(createMessage(VALIDATE_ERROR_MESSAGE, [error]))
+    throw new Error(createMessage(RABBITMQ_VALIDATE_ERROR_MESSAGE, [error]))
   }
 }
 
@@ -33,7 +34,7 @@ export function getRabbitMQConfig(): RabbitConfig {
   const config: RabbitConfig = {
     host: process.env.RABBITMQ_HOST,
     password: process.env.RABBITMQ_PASSWORD,
-    port: parseInt(process.env.RABBITMQ_PORT, 10) || DEFAULT_RABBITMQ_PORT,
+    port: parseInt(process.env.RABBITMQ_PORT, 10) || RABBITMQ_DEFAULT_PORT,
     user: process.env.RABBITMQ_USER,
     queue: process.env.RABBITMQ_QUEUE,
     exchange: process.env.RABBITMQ_EXCHANGE,

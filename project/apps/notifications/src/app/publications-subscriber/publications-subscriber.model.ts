@@ -16,7 +16,10 @@ export class PublicationsSubscriberModel extends Document implements Subscriber 
     required: true
   })
   public email: string;
-  public lastNotification?: Date;
+  @Prop({
+    default: null
+  })
+  public lastNotification: null | Date;
   public id?: string;
 }
 

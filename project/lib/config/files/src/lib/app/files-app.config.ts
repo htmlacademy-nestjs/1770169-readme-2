@@ -26,4 +26,4 @@ function getAppConfig(): AppConfig {
   return config;
 }
 
-export default registerAs('filesApp', getAppConfig);
+export const FilesAppConfig = registerAs('filesApp', getAppConfig);

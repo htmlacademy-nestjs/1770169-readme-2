@@ -268,6 +268,6 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
       }
     })
 
-    return records.map((record) => this.createEntityFromDocument(Object.assign({}, record)))
+    return records.map((record) => this.createEntityFromDocument(structuredClone(record)))
   }
 }

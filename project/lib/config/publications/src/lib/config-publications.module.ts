@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { ENV_FILE_PATH } from './publications.constant';
-import PublicationsAppConfig from './app/publications-app.config';
-import PublicationsRabbitConfig from './rabbit/publications-rabbit.config';
+import { PublicationsAppConfig } from './app/publications-app.config';
+import { PublicationsRabbitConfig } from './rabbit/publications-rabbit.config';
 
 @Module({
   imports: [

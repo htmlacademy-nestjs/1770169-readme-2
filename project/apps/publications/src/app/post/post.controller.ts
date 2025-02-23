@@ -23,7 +23,7 @@ import { PostRDO } from './rdo/post.rdo';
 import {
   NOT_AUTHORIZED_RESPONSE,
   NOTIFICATIONS_SEND_RESPONSE,
-  NotificationsSubscribe,
+  NOTIFICATIONS_SUBSCRIBE,
   POST_CREATED_RESPONSE,
   POST_DELETE_RESPONSE,
   POST_FOUND_RESPONSE,
@@ -31,7 +31,7 @@ import {
   POST_REPOSTED_RESPONSE,
   POST_UPDATE_RESPONSE,
   POSTS_FOUND_RESPONSE,
-  PublicationsSubscribe,
+  PUBLICATIONS_SUBSCRIBE,
   Route,
   ROUTE_PREFIX,
   TAG,
@@ -174,15 +174,15 @@ export class PostController {
     description: NOTIFICATIONS_SEND_RESPONSE
   })
   @RabbitSubscribe({
-    exchange: PublicationsSubscribe.EXCHANGE,
+    exchange: PUBLICATIONS_SUBSCRIBE.EXCHANGE,
     routingKey: RabbitRouting.GetPublications,
-    queue: PublicationsSubscribe.QUEUE
+    queue: PUBLICATIONS_SUBSCRIBE.QUEUE
   })
   async getLatestPosts(message: GetPostDTO) {
     const posts = await this.postService.getLatestPosts(message.lastNotification);
 
     await this.rabbitClient.publish(
-      NotificationsSubscribe.EXCHANGE,
+      NOTIFICATIONS_SUBSCRIBE.EXCHANGE,
       RabbitRouting.PublicationsReceived,
       {
         email: message.email,

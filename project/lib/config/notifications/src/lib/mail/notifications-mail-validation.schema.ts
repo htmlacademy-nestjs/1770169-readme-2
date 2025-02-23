@@ -6,4 +6,5 @@ export const notificationsMailValidationSchema = Joi.object({
   user: Joi.string().required(),
   password: Joi.string().required(),
   from: Joi.string().required(),
+  secure: Joi.boolean().required()
 })

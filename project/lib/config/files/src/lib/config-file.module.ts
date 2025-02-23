@@ -3,10 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 
 
 import { ENV_FILE_PATH } from './config-file.constant';
-import FilesAppConfig from './app/files-app.config';
-import FilesMongoConfig from './mongo/files-mongo.config';
-
-
+import { FilesAppConfig } from './app/files-app.config';
+import { FilesMongoConfig } from './mongo/files-mongo.config';
 
 @Module({
   imports: [

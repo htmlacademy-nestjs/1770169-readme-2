@@ -2,4 +2,4 @@ import { registerAs } from '@nestjs/config';
 
 import { getAppConfig } from '@project/lib/shared/helpers';
 
-export default registerAs('notificationsApp', getAppConfig);
+export const NotificationsAppConfig = registerAs('notificationsApp', getAppConfig);

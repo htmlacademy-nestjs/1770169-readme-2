@@ -4,7 +4,7 @@ import { Subscriber } from '@project/lib/shared/app/types';
 export class PublicationsSubscriberEntity implements Subscriber, Entity<string, Subscriber> {
   public id?: string;
   public email: string;
-  public lastNotification?: Date;
+  public lastNotification: null | Date;
 
   constructor(data: Subscriber) {
     this.populate(data)
@@ -13,7 +13,7 @@ export class PublicationsSubscriberEntity implements Subscriber, Entity<string, 
   public populate(data: Subscriber) {
     this.id = data.id ?? undefined;
     this.email = data.email;
-    this.lastNotification = data.lastNotification ?? undefined;
+    this.lastNotification = data.lastNotification;
 
     return this;
   }
