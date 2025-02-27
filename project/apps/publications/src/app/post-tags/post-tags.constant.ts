@@ -12,8 +12,3 @@ export const TAG_LENGTH = {
   MIN: 3,
   MAX: 10
 };
-
-export const TAGS_PROPERTY = {
-  DESCRIPTION: 'List of publication tags.',
-  EXAMPLE: '#city#japan#sunrise#tokio'
-}

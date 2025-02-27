@@ -5,25 +5,27 @@ import {
   HttpCode,
   HttpStatus,
   Param, Post,
+  Req,
   UseGuards
 } from '@nestjs/common';
 
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { fillDto } from '@project/lib/shared/helpers';
 import { MongoIdValidationPipe } from '@project/lib/core';
+import { CreateUserDTO } from '@project/lib/shared/app/dto';
+import { AuthenticatedUserRDO, CreatedUserRDO, UserInfoRDO } from '@project/lib/shared/app/rdo';
+import { RequestWithTokenPayload } from '@project/lib/shared/app/types';
+import { fillDto } from '@project/lib/shared/helpers';
 
 import { AuthService } from './auth.service';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 import { NotificationService } from '../notification/notification.service';
-import { CreateUserDTO } from './dto/create-user.dto';
-import { LoginUserDTO } from './dto/login-user.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { NewUserRDO } from './rdo/new-user.rdo';
-import { LoggedUserRDO } from './rdo/logged-user.rdo';
-import { UserRDO } from './rdo/user.rdo';
+
+import { JWTAuthGuard } from './guards/jwt-auth.guard';
 import {
   AUTHENTICATION_ERROR_RESPONSE,
   EXISTING_EMAIL_RESPONSE,
+  GET_TOKEN_RESPONSE,
   NOT_FOUND_BY_ID_RESPONSE,
   Route,
   ROUTE_PREFIX,
@@ -32,13 +34,17 @@ import {
   USER_CREATED_RESPONSE,
   VALIDATION_ERROR_RESPONSE
 } from './auth.constant';
+import { UserEntity } from '../user/user.entity';
+import { JWTRefreshGuard } from './guards/jwt-refresh.guard';
+import { PostService } from '../post/post.service';
 
 @ApiTags(TAG)
 @Controller(ROUTE_PREFIX)
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private readonly postService: PostService
   ) {}
 
   @ApiResponse({
@@ -56,9 +62,9 @@ export class AuthController {
   @Post(Route.Registration)
   public async create(@Body() dto: CreateUserDTO) {
     const newUser = await this.authService.registerUser(dto);
-    await this.notificationService.registerSubscriber({email: newUser.email})
+    await this.notificationService.registerSubscriber({ email: newUser.email })
 
-    return fillDto(NewUserRDO, newUser.toObject());
+    return fillDto(CreatedUserRDO, newUser.toObject());
   }
 
   @ApiResponse({
@@ -74,12 +80,12 @@ export class AuthController {
     description: AUTHENTICATION_ERROR_RESPONSE
   })
   @Post(Route.Authentication)
-  @HttpCode(200)
-  public async login(@Body() dto: LoginUserDTO) {
-    const verifiedUser = await this.authService.verifyUser(dto);
-    const token = await this.authService.createToken(verifiedUser)
+  @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  public async login(@Req() { user }: { user?: UserEntity }) {
+    const token = await this.authService.createToken(user)
 
-    return fillDto(LoggedUserRDO, {...verifiedUser.toObject(), ...token});
+    return fillDto(AuthenticatedUserRDO, { ...user.toObject(), ...token });
   }
 
   @ApiResponse({
@@ -90,12 +96,30 @@ export class AuthController {
     status: HttpStatus.CONFLICT,
     description: NOT_FOUND_BY_ID_RESPONSE
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JWTAuthGuard)
   @Get(Route.UserParam)
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   public async show(@Param('id', MongoIdValidationPipe) id: string) {
     const user = await this.authService.getUser(id);
+    const postCount = await this.postService.getPosts({userId: id})
 
-    return fillDto(UserRDO, user.toObject());
+    return fillDto(UserInfoRDO, user.toObject());
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: GET_TOKEN_RESPONSE
+  })
+  @UseGuards(JWTRefreshGuard)
+  @Post(Route.Refresh)
+  @HttpCode(HttpStatus.OK)
+  public async refreshToken(@Req() { user }: { user?: UserEntity }) {
+    return this.authService.createToken(user);
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @Post(Route.Check)
+  public async checkToken(@Req() { user }: RequestWithTokenPayload) {
+    return user;
   }
 }

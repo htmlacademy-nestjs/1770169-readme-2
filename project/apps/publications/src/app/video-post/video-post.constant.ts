@@ -6,17 +6,6 @@ export const REQUIRED_MESSAGE = 'The field should not be empty.';
 export const URL_MATCH_MESSAGE = 'The link to the video must be on the YouTube service.';
 export const REG_EXP = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
 
-
-export const TITLE_PROPERTY = {
-  DESCRIPTION: 'Title of the publication',
-  EXAMPLE: 'Burabai Kazakhstan'
-}
-
-export const URL_PROPERTY = {
-  DESCRIPTION: 'A valid link to a video page on the YouTube service.',
-  EXAMPLE: 'https://www.youtube.com/watch?v=xBInF48M0F0'
-}
-
 export const TITLE_LENGTH = {
   MIN: 20,
   MAX: 50

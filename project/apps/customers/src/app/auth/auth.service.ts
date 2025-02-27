@@ -1,18 +1,22 @@
+import { ConfigType } from '@nestjs/config';
 import {
   ConflictException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
   UnauthorizedException
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
-import { Token, TokenPayload, User } from '@project/lib/shared/app/types';
-import { createMessage } from '@project/lib/shared/helpers';
+import { CustomersJwtConfig } from '@project/lib/config/customers';
+import { CreateUserDTO, LoginUserDTO } from '@project/lib/shared/app/dto';
+import { Token, User } from '@project/lib/shared/app/types';
+import { createJWTPayload, createMessage } from '@project/lib/shared/helpers';
 
+import { UserEntity } from '../user/user.entity';
 import { UserRepository } from '../user/user.repository';
-import { CreateUserDTO } from './dto/create-user.dto';
-import { LoginUserDTO } from './dto/login-user.dto';
 import {
   NOT_FOUND_BY_EMAIL_MESSAGE,
   NOT_FOUND_BY_ID_MESSAGE,
@@ -21,8 +25,6 @@ import {
   USER_EXISTS_MESSAGE,
   WRONG_PASSWORD_MESSAGE
 } from './auth.constant';
-import { UserEntity } from '../user/user.entity';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +33,7 @@ export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
+    @Inject(CustomersJwtConfig.KEY)private readonly jwtOptions: ConfigType<typeof CustomersJwtConfig>
   ) {}
 
   public async registerUser(dto: CreateUserDTO): Promise<UserEntity> {
@@ -75,15 +78,30 @@ export class AuthService {
     return existUser;
   }
 
-  public async createToken(user: User): Promise<Token> {
-    const payload: TokenPayload = {
-      id: user.id,
-      email: user.email,
+  public async getUserByEmail(email: string): Promise<UserEntity> {
+    const existUser = await this.userRepository.findByEmail(email);
+
+    if(existUser) {
+      throw new NotFoundException(createMessage(NOT_FOUND_BY_EMAIL_MESSAGE, [email]))
     }
 
+    return existUser;
+  }
+
+  public async createToken(user: User): Promise<Token> {
+    const accessTokenPayload = createJWTPayload(user);
+    const refreshTokenPayload = {
+      ...accessTokenPayload,
+      tokenId: crypto.randomUUID(),
+      secret: this.jwtOptions.refreshTokenSecret,
+      expiresIn: this.jwtOptions.refreshTokenExpiresIn
+    };
+
     try {
-      const accessToken = await this.jwtService.signAsync(payload);
-      return {accessToken};
+      const accessToken = await this.jwtService.signAsync(accessTokenPayload);
+      const refreshToken = await this.jwtService.signAsync(refreshTokenPayload);
+
+      return { accessToken, refreshToken };
     } catch (error) {
       this.logger.error(createMessage(TOKEN_GENERATE_ERROR, [error.message]));
       throw new InternalServerErrorException(TOKEN_CREATION_ERROR);

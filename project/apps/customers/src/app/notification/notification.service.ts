@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 
+import { CreateSubscriberDTO } from '@project/lib/shared/app/dto';
 import { RabbitRouting } from '@project/lib/shared/app/types';
 
-import { CreateSubscriberDTO } from './dto/create-subscriber.dto';
 import { CUSTOMERS_SUBSCRIBE } from './notification.constant';
 
 @Injectable()

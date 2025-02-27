@@ -16,8 +16,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = PREFIX;
   const configService = app.get(ConfigService);
-  const port = configService.get<string>('app.port');
-  const hostname = configService.get<string>('app.host');
+  const port = configService.get<string>('newsFeedApp.port');
+  const hostname = configService.get<string>('newsFeedApp.host');
   app.setGlobalPrefix(globalPrefix);
 
   await app.listen(port);

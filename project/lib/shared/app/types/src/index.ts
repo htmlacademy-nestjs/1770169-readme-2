@@ -24,3 +24,7 @@ export * from './lib/rabbit-config';
 export * from './lib/mongoose-config';
 export * from './lib/app-config.interface';
 export * from './lib/environment.enum';
+export * from './lib/jwt-token.interface';
+export * from './lib/refresh-token-payload.interface';
+export * from './lib/request-with-token-payload';
+export * from './lib/route.enum';

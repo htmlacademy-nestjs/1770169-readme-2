@@ -5,22 +5,6 @@ export const PREVIEW_LENGTH_MESSAGE = 'The preview length should be from 50 to 2
 export const CONTENT_LENGTH_MESSAGE = 'The content length should be from 100 to 1024 characters.';
 export const REQUIRED_MESSAGE = 'The field should not be empty.';
 
-export const TITLE_PROPERTY = {
-  DESCRIPTION: 'Title of the publication',
-  EXAMPLE: 'Artificial intelligence still deprives people of work.'
-}
-
-export const PREVIEW_PROPERTY = {
-  DESCRIPTION: 'Announcement of the publication.',
-  EXAMPLE: 'The scientific journal has used AI to create scientific articles.'
-}
-
-export const CONTENT_PROPERTY = {
-  DESCRIPTION: 'The content of a text publication.',
-  EXAMPLE: `The whole point is due to the use of generative artificial intelligence (AI) to create scientific articles.
-      The experiment that the magazine went to caused criticism and indignation not only from the scientific community and readers, but also from former authors of the publication, editors and two founders.`
-}
-
 export const TITLE_LENGTH = {
   MIN: 20,
   MAX: 50

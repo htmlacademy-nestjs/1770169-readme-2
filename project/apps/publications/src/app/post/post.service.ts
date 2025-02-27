@@ -146,4 +146,8 @@ export class PostService {
   public async getLatestPosts(lastNotification?: Date) {
     return this.postRepository.findLatestPosts(lastNotification);
   }
+
+  public async getUserPostsCount(id: string) {
+    return this.postRepository.getUserPostsCount(id);
+  }
 }

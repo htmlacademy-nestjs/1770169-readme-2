@@ -1,6 +1,7 @@
 import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 
-import { REGEX } from './helpers.constant';
+import { REGEX, TIME_REGEX, VALUE_PARSE_ERROR, WRONG_TIME_ERROR } from './helpers.constant';
+import { DateTimeUnit, TimeAndUnit } from './helpers.types';
 
 export function fillDto<T, P>(dto: new () => T, plainObject: P, options?: ClassTransformOptions): T;
 
@@ -29,3 +30,21 @@ export function getRabbitMQConnectionString({user, password, host, port}): strin
 export function parseBoolean(value: string | undefined): boolean {
   return value === 'true';
 };
+
+export function parseTime(time: string): TimeAndUnit {
+  const match = TIME_REGEX.exec(time);
+
+  if (!TIME_REGEX.exec(time)) {
+    throw new Error(createMessage(WRONG_TIME_ERROR, [time]));
+  }
+
+  const [, valueRaw, unitRaw] = match;
+  const value = parseInt(valueRaw, 10);
+  const unit = unitRaw as DateTimeUnit;
+
+  if (isNaN(value)) {
+    throw new Error(VALUE_PARSE_ERROR);
+  }
+
+  return {value, unit}
+}

@@ -21,6 +21,7 @@ import { PostService } from './post.service';
 import { CreatePostDTO } from './dto/create-post.dto';
 import { PostRDO } from './rdo/post.rdo';
 import {
+  CUSTOMERS_SUBSCRIBE,
   NOT_AUTHORIZED_RESPONSE,
   NOTIFICATIONS_SEND_RESPONSE,
   NOTIFICATIONS_SUBSCRIBE,
@@ -65,7 +66,7 @@ export class PostController {
 
   @Post(Route.Root)
   public async create(@Body() dto: CreatePostDTO) {
-    const newPost = await this.postService.createPost({...dto, userId: '66e87f4f646c29eff76565a8'});
+    const newPost = await this.postService.createPost(dto);
 
     return fillDto(PostRDO, newPost.toObject(), {exposeDefaultValues: false});
   }
@@ -189,5 +190,17 @@ export class PostController {
         posts: fillDto(PostRDO, posts.map((post) => post.toObject()), {exposeDefaultValues: false})
       }
     );
+  }
+
+  @RabbitSubscribe({
+    exchange: CUSTOMERS_SUBSCRIBE.EXCHANGE,
+    routingKey: RabbitRouting.GetPublications,
+    queue: CUSTOMERS_SUBSCRIBE.QUEUE
+  })
+  async getPostCount(message: {userId: string}) {
+    console.log('gjghhjghjghj')
+    const count = await this.postService.getUserPostsCount(message.userId);
+    console.log('count: ', count)
+    return count;
   }
 }

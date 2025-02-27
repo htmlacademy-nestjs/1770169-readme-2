@@ -270,4 +270,8 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
 
     return records.map((record) => this.createEntityFromDocument(structuredClone(record)))
   }
+
+  public async getUserPostsCount(userId: string) {
+    return this.getPostCount({userId});
+  }
 }
