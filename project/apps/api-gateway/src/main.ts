@@ -7,6 +7,7 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 
+import { createSwagger } from '@project/lib/swagger';
 import { createMessage } from '@project/lib/shared/helpers';
 
 import { AppModule } from './app/app.module';
@@ -19,6 +20,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<string>('apiGatewayApp.port');
   const hostname = configService.get<string>('apiGatewayApp.host');
+  createSwagger(app);
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalInterceptors(new RequestIdInterceptor());
 

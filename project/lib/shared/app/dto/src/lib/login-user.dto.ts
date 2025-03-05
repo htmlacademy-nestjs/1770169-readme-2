@@ -3,29 +3,26 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
 
 import {
-  EMAIL_TYPE_MESSAGE,
   EMAIL_PROPERTY,
-  FIELD_TYPE_MESSAGE,
   PASSWORD_LENGTH,
-  PASSWORD_PROPERTY,
-  REQUIRED_MESSAGE
-} from '../auth.constant';
+  PASSWORD_PROPERTY
+} from './dto.constant';
 
 export class LoginUserDTO {
   @ApiProperty({
     description: EMAIL_PROPERTY.DESCRIPTION,
     example: EMAIL_PROPERTY.EXAMPLE
   })
-  @IsEmail({}, {message: EMAIL_TYPE_MESSAGE})
-  @IsNotEmpty({message: REQUIRED_MESSAGE})
+  @IsEmail()
+  @IsNotEmpty()
   public email: string;
 
   @ApiProperty({
     description: PASSWORD_PROPERTY.DESCRIPTION,
     example: PASSWORD_PROPERTY.EXAMPLE
   })
-  @IsString({message: FIELD_TYPE_MESSAGE})
+  @IsString()
   @Length(PASSWORD_LENGTH.MIN, PASSWORD_LENGTH.MAX)
-  @IsNotEmpty({message: REQUIRED_MESSAGE})
+  @IsNotEmpty()
   public password: string;
 }

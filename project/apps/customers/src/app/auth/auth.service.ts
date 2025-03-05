@@ -11,7 +11,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 
 import { CustomersJwtConfig } from '@project/lib/config/customers';
-import { CreateUserDTO, LoginUserDTO } from '@project/lib/shared/app/dto';
+import { CreateUserDTO, GetUsersDTO, LoginUserDTO, UpdatePasswordDTO } from '@project/lib/shared/app/dto';
 import { Token, User } from '@project/lib/shared/app/types';
 import { createJWTPayload, createMessage } from '@project/lib/shared/helpers';
 
@@ -25,6 +25,7 @@ import {
   USER_EXISTS_MESSAGE,
   WRONG_PASSWORD_MESSAGE
 } from './auth.constant';
+import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,7 @@ export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
+    private readonly refreshTokenService: RefreshTokenService,
     @Inject(CustomersJwtConfig.KEY)private readonly jwtOptions: ConfigType<typeof CustomersJwtConfig>
   ) {}
 
@@ -41,7 +43,8 @@ export class AuthService {
       fullName: dto.fullName,
       email: dto.email,
       password: '',
-      avatar: dto.avatar
+      avatar: dto.avatar,
+      subscriptions: []
     }
     const existUser = await this.userRepository.findByEmail(dto.email);
 
@@ -81,30 +84,58 @@ export class AuthService {
   public async getUserByEmail(email: string): Promise<UserEntity> {
     const existUser = await this.userRepository.findByEmail(email);
 
-    if(existUser) {
+    if(!existUser) {
       throw new NotFoundException(createMessage(NOT_FOUND_BY_EMAIL_MESSAGE, [email]))
     }
 
     return existUser;
   }
 
+  public async getByUserIds(dto: GetUsersDTO): Promise<UserEntity[]> {
+    return this.userRepository.findByUserIds(dto.userIds);
+  }
+
+  public async updateUserPassword(id: string, dto: UpdatePasswordDTO): Promise<void> {
+    const existUser = await this.userRepository.findById(id);
+    const isMatch = await existUser.comparePassword(dto.oldPassword);
+
+    if(!isMatch) {
+      throw new UnauthorizedException(WRONG_PASSWORD_MESSAGE);
+    }
+    existUser.setPassword(dto.password)
+
+    await this.userRepository.update(id, existUser);
+  }
+
   public async createToken(user: User): Promise<Token> {
     const accessTokenPayload = createJWTPayload(user);
     const refreshTokenPayload = {
       ...accessTokenPayload,
-      tokenId: crypto.randomUUID(),
-      secret: this.jwtOptions.refreshTokenSecret,
-      expiresIn: this.jwtOptions.refreshTokenExpiresIn
+      tokenId: crypto.randomUUID()
     };
 
     try {
       const accessToken = await this.jwtService.signAsync(accessTokenPayload);
-      const refreshToken = await this.jwtService.signAsync(refreshTokenPayload);
+      const refreshToken = await this.jwtService.signAsync(refreshTokenPayload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.refreshTokenExpiresIn
+      });
+      await this.refreshTokenService.createRefreshSession(refreshTokenPayload)
 
       return { accessToken, refreshToken };
     } catch (error) {
       this.logger.error(createMessage(TOKEN_GENERATE_ERROR, [error.message]));
       throw new InternalServerErrorException(TOKEN_CREATION_ERROR);
     }
+  }
+
+  public async toggleSubscription(id: string, subscribeId: string): Promise<UserEntity | null> {
+    const userEntity = await this.userRepository.addOrDeleteSubscription(id, subscribeId);
+
+    return userEntity;
+  }
+
+  public async getSubscribersCount(userId: string): Promise<number> {
+    return this.userRepository.getSubscribersCount(userId);
   }
 }

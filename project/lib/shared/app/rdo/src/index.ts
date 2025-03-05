@@ -9,5 +9,7 @@ export * from './lib/created-text-post.rdo';
 export * from './lib/created-user.rdo';
 export * from './lib/created-video-post.rdo';
 export * from './lib/posts-with-pagination.rdo';
+export * from './lib/comments-with-pagination.rdo';
 export * from './lib/uploaded-file.rdo';
 export * from './lib/user-info.rdo';
+export * from './lib/user.rdo';

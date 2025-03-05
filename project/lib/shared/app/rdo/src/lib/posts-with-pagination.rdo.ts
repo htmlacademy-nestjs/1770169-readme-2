@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -16,6 +16,7 @@ export class PostsWithPaginationRDO {
     description: ENTITIES_PROPERTY.DESCRIPTION
   })
   @Expose()
+  @Type(() => CreatedPostRDO)
   public entities: CreatedPostRDO[];
 
   @ApiProperty({

@@ -4,28 +4,25 @@ import { IsNotEmpty, IsString, IsUrl, MaxLength } from 'class-validator';
 
 import {
   DESCRIPTION_LENGTH_MESSAGE,
-  DESCRIPTION_TYPE_MESSAGE,
   DESCRIPTION_PROPERTY,
   MAX_DESCRIPTION_LENGTH,
-  REQUIRED_MESSAGE,
-  URL_TYPE_MESSAGE,
   URL_PROPERTY
-} from '../link-post.constant';
+} from './dto.constant';
 
 export class CreateLinkPostDTO {
   @ApiProperty({
     description: URL_PROPERTY.DESCRIPTION,
     example: URL_PROPERTY.EXAMPLE
   })
-  @IsUrl({}, {message: URL_TYPE_MESSAGE})
-  @IsNotEmpty({message: REQUIRED_MESSAGE})
+  @IsUrl()
+  @IsNotEmpty()
   public url: string;
 
   @ApiProperty({
     description: DESCRIPTION_PROPERTY.DESCRIPTION,
     example: DESCRIPTION_PROPERTY.EXAMPLE
   })
-  @IsString({message: DESCRIPTION_TYPE_MESSAGE})
+  @IsString()
   @MaxLength(MAX_DESCRIPTION_LENGTH, {message: DESCRIPTION_LENGTH_MESSAGE})
   public description: string;
 }

@@ -6,20 +6,18 @@ import {
   AUTHOR_LENGTH_MESSAGE,
   AUTHOR_LENGTH,
   AUTHOR_PROPERTY,
-  CONTENT_LENGTH_MESSAGE,
-  CONTENT_LENGTH,
-  CONTENT_PROPERTY,
-  REQUIRED_MESSAGE,
-  TYPE_MESSAGE
-} from '../quote-post.constant';
+  QUOTE_CONTENT_LENGTH_MESSAGE,
+  QUOTE_CONTENT_LENGTH,
+  CONTENT_PROPERTY
+} from './dto.constant';
 
 export class CreateQuotePostDTO {
   @ApiProperty({
     description: AUTHOR_PROPERTY.DESCRIPTION,
     example: AUTHOR_PROPERTY.EXAMPLE
   })
-  @IsString({message: TYPE_MESSAGE})
-  @IsNotEmpty({message: REQUIRED_MESSAGE})
+  @IsString()
+  @IsNotEmpty()
   @Length(AUTHOR_LENGTH.MIN, AUTHOR_LENGTH.MAX, {message: AUTHOR_LENGTH_MESSAGE})
   public author: string;
 
@@ -27,8 +25,8 @@ export class CreateQuotePostDTO {
     description: CONTENT_PROPERTY.DESCRIPTION,
     example: CONTENT_PROPERTY.EXAMPLE
   })
-  @IsString({message: TYPE_MESSAGE})
-  @IsNotEmpty({message: REQUIRED_MESSAGE})
-  @Length(CONTENT_LENGTH.MIN, CONTENT_LENGTH.MAX, {message: CONTENT_LENGTH_MESSAGE})
+  @IsString()
+  @IsNotEmpty()
+  @Length(QUOTE_CONTENT_LENGTH.MIN, QUOTE_CONTENT_LENGTH.MAX, {message: QUOTE_CONTENT_LENGTH_MESSAGE})
   public content: string;
 }

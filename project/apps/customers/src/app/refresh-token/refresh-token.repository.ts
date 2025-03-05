@@ -14,15 +14,15 @@ export class RefreshTokenRepository extends BaseMongoRepository<RefreshTokenEnti
     super(refreshTokenModel, RefreshTokenEntity.fromObject)
   }
 
-  public async deleteByTokenId(id: string) {
-    return this.model.deleteOne({id}).exec();
+  public async deleteByTokenId(tokenId: string) {
+    return this.model.deleteOne({ tokenId }).exec();
   }
 
-  public async findByTokenId(id: string) {
-    return this.model.findOne({id}).exec();
+  public async findByTokenId(tokenId: string) {
+    return this.model.findOne({ tokenId }).exec();
   }
 
   public async deleteExpiredTokens() {
-    return this.model.deleteMany({expiresIn: {$lt: new Date()}})
+    return this.model.deleteMany({ expiresIn: { $lt: new Date() } })
   }
 }

@@ -36,5 +36,5 @@ export class UserInfoRDO {
     example: SUBSCRIBE_COUNT_PROPERTY.EXAMPLE
   })
   @Expose()
-  public subscribeCount: number;
+  public subscribersCount: number;
 }

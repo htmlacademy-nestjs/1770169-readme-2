@@ -7,7 +7,8 @@ import {
   CREATED_AT_PROPERTY,
   EMAIL_PROPERTY,
   FULL_NAME_PROPERTY,
-  ID_PROPERTY
+  ID_PROPERTY,
+  SUBSCRIPTIONS_PROPERTY
 } from './rdo.constant';
 
 export class CreatedUserRDO {
@@ -45,4 +46,11 @@ export class CreatedUserRDO {
   })
   @Expose()
   public createdAt: string;
+
+  @ApiProperty({
+    description: SUBSCRIPTIONS_PROPERTY.DESCRIPTION,
+    example: SUBSCRIPTIONS_PROPERTY.EXAMPLE
+  })
+  @Expose()
+  public subscriptions: string[];
 }

@@ -4,7 +4,8 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Param, Post,
+  Param, Patch, Post,
+  Query,
   Req,
   UseGuards
 } from '@nestjs/common';
@@ -12,9 +13,9 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MongoIdValidationPipe } from '@project/lib/core';
-import { CreateUserDTO } from '@project/lib/shared/app/dto';
-import { AuthenticatedUserRDO, CreatedUserRDO, UserInfoRDO } from '@project/lib/shared/app/rdo';
-import { RequestWithTokenPayload } from '@project/lib/shared/app/types';
+import { CreateUserDTO, GetUsersDTO, UpdatePasswordDTO } from '@project/lib/shared/app/dto';
+import { AuthenticatedUserRDO, CreatedUserRDO, UserInfoRDO, UserRDO } from '@project/lib/shared/app/rdo';
+import { RequestWithTokenPayload, RequestWithUser, Route } from '@project/lib/shared/app/types';
 import { fillDto } from '@project/lib/shared/helpers';
 
 import { AuthService } from './auth.service';
@@ -27,14 +28,13 @@ import {
   EXISTING_EMAIL_RESPONSE,
   GET_TOKEN_RESPONSE,
   NOT_FOUND_BY_ID_RESPONSE,
-  Route,
   ROUTE_PREFIX,
   SUCCESSFUL_AUTHORIZATION_RESPONSE,
   TAG,
   USER_CREATED_RESPONSE,
+  USER_UPDATED_RESPONSE,
   VALIDATION_ERROR_RESPONSE
 } from './auth.constant';
-import { UserEntity } from '../user/user.entity';
 import { JWTRefreshGuard } from './guards/jwt-refresh.guard';
 import { PostService } from '../post/post.service';
 
@@ -82,10 +82,20 @@ export class AuthController {
   @Post(Route.Authentication)
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
-  public async login(@Req() { user }: { user?: UserEntity }) {
+  public async login(@Req() { user }: RequestWithUser) {
     const token = await this.authService.createToken(user)
 
-    return fillDto(AuthenticatedUserRDO, { ...user.toObject(), ...token });
+    return fillDto(AuthenticatedUserRDO, { ...user, ...token });
+  }
+
+  @Get(Route.Root)
+  @HttpCode(HttpStatus.OK)
+  public async getUserInfo(@Query('userId') userId: string) {
+    const userEntity = await this.authService.getUser(userId);
+    userEntity.postCount = await this.postService.getPostsCount({ userId });
+    userEntity.subscribersCount = await this.authService.getSubscribersCount(userId);
+
+    return fillDto(UserInfoRDO, userEntity.toObject());
   }
 
   @ApiResponse({
@@ -96,14 +106,86 @@ export class AuthController {
     status: HttpStatus.CONFLICT,
     description: NOT_FOUND_BY_ID_RESPONSE
   })
-  @UseGuards(JWTAuthGuard)
-  @Get(Route.UserParam)
+  @Get(Route.Param)
   @HttpCode(HttpStatus.OK)
-  public async show(@Param('id', MongoIdValidationPipe) id: string) {
-    const user = await this.authService.getUser(id);
-    const postCount = await this.postService.getPosts({userId: id})
+  public async show(@Param('id') id: string) {
+    const userEntity = await this.authService.getUser(id);
 
-    return fillDto(UserInfoRDO, user.toObject());
+    return fillDto(UserRDO, userEntity.toObject());
+  }
+
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: VALIDATION_ERROR_RESPONSE
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: NOT_FOUND_BY_ID_RESPONSE
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: AUTHENTICATION_ERROR_RESPONSE
+  })
+  @UseGuards(JWTAuthGuard)
+  @Get(Route.Subscribers)
+  @HttpCode(HttpStatus.OK)
+  public async getSubscriptions(@Param('id') id: string) {
+    const userEntity = await this.authService.getUser(id);
+
+    return userEntity.toObject().subscriptions;
+  }
+
+  @Post(Route.Root)
+  @HttpCode(HttpStatus.OK)
+  public async index(@Body() dto: GetUsersDTO) {
+    const usersEntity = await this.authService.getByUserIds(dto);
+
+    return fillDto(UserRDO, usersEntity.map((userEntity) => userEntity.toObject()));
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: USER_UPDATED_RESPONSE
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: VALIDATION_ERROR_RESPONSE
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: AUTHENTICATION_ERROR_RESPONSE
+  })
+  @UseGuards(JWTAuthGuard)
+  @Patch(Route.Update)
+  public async updatePassword(
+    @Param('id', MongoIdValidationPipe) id: string,
+    @Body() dto: UpdatePasswordDTO
+  ) {
+    await this.authService.updateUserPassword(id, dto);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: VALIDATION_ERROR_RESPONSE
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: NOT_FOUND_BY_ID_RESPONSE
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: AUTHENTICATION_ERROR_RESPONSE
+  })
+  @UseGuards(JWTAuthGuard)
+  @Post(Route.Subscribe)
+  @HttpCode(HttpStatus.OK)
+  public async subscribe(
+    @Param('id') id: string,
+    @Query('userId') subscribeId: string,
+  ) {
+    const userEntity = await this.authService.toggleSubscription(id, subscribeId);
+
+    return fillDto(UserInfoRDO, userEntity.toObject());
   }
 
   @ApiResponse({
@@ -113,10 +195,14 @@ export class AuthController {
   @UseGuards(JWTRefreshGuard)
   @Post(Route.Refresh)
   @HttpCode(HttpStatus.OK)
-  public async refreshToken(@Req() { user }: { user?: UserEntity }) {
+  public async refreshToken(@Req() { user }: RequestWithUser) {
     return this.authService.createToken(user);
   }
 
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: AUTHENTICATION_ERROR_RESPONSE
+  })
   @UseGuards(JWTAuthGuard)
   @Post(Route.Check)
   public async checkToken(@Req() { user }: RequestWithTokenPayload) {

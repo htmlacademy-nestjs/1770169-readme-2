@@ -4,19 +4,17 @@ import { IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 
 import {
   DESCRIPTION_LENGTH_MESSAGE,
-  DESCRIPTION_TYPE_MESSAGE,
   DESCRIPTION_PROPERTY,
   MAX_DESCRIPTION_LENGTH,
-  URL_TYPE_MESSAGE,
   URL_PROPERTY
-} from '../link-post.constant';
+} from './dto.constant';
 
 export class UpdateLinkPostDTO {
   @ApiProperty({
     description: URL_PROPERTY.DESCRIPTION,
     example: URL_PROPERTY.EXAMPLE
   })
-  @IsUrl({}, {message: URL_TYPE_MESSAGE})
+  @IsUrl()
   @IsOptional()
   public url?: string;
 
@@ -24,7 +22,7 @@ export class UpdateLinkPostDTO {
     description: DESCRIPTION_PROPERTY.DESCRIPTION,
     example: DESCRIPTION_PROPERTY.EXAMPLE
   })
-  @IsString({message: DESCRIPTION_TYPE_MESSAGE})
+  @IsString()
   @MaxLength(MAX_DESCRIPTION_LENGTH, {message: DESCRIPTION_LENGTH_MESSAGE})
   @IsOptional()
   public description?: string;

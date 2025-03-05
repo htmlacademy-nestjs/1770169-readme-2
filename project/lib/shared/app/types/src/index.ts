@@ -26,5 +26,8 @@ export * from './lib/app-config.interface';
 export * from './lib/environment.enum';
 export * from './lib/jwt-token.interface';
 export * from './lib/refresh-token-payload.interface';
+export * from './lib/request-with-user';
 export * from './lib/request-with-token-payload';
 export * from './lib/route.enum';
+export * from './lib/exchange.enum';
+export * from './lib/queue.enum';

@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 
-import { CreatePostDTO } from '@project/lib/shared/app/dto';
-import { RabbitRouting } from '@project/lib/shared/app/types';
+import { SendPostCount } from '@project/lib/shared/app/dto';
+import { Exchange, RabbitRouting } from '@project/lib/shared/app/types';
 
-import { CUSTOMERS_SUBSCRIBE } from './post.constant';
+import { REQUEST_TIMEOUT } from './post.constant';
 
 @Injectable()
 export class PostService {
@@ -13,11 +13,12 @@ export class PostService {
     private readonly rabbitClient: AmqpConnection,
   ) {}
 
-  public async getPosts(dto: CreatePostDTO) {
-    return this.rabbitClient.publish<CreatePostDTO>(
-      CUSTOMERS_SUBSCRIBE.EXCHANGE,
-      RabbitRouting.GetPublicationsCount,
-      dto
-    )
+  public async getPostsCount(dto: SendPostCount) {
+    return this.rabbitClient.request<number>({
+      exchange: Exchange.PublicationsExchange,
+      routingKey: RabbitRouting.GetPublicationsCount,
+      payload: dto,
+      timeout: REQUEST_TIMEOUT
+    });
   };
 }

@@ -1,5 +1,4 @@
 export * from './lib/create-comment.dto';
-export * from './lib/create-like.dto';
 export * from './lib/create-link-post.dto';
 export * from './lib/create-photo-post.dto';
 export * from './lib/create-post-tags.dto';
@@ -19,5 +18,7 @@ export * from './lib/update-post-tags.dto';
 export * from './lib/update-post.dto';
 export * from './lib/update-quote-post.dto';
 export * from './lib/update-text-post.dto';
-export * from './lib/update-user.dto';
+export * from './lib/update-password.dto';
 export * from './lib/update-video-post.dto';
+export * from './lib/send-post-count.dto';
+export * from './lib/get-users.dto';

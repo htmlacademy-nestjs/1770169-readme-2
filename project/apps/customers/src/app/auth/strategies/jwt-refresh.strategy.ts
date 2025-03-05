@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 
@@ -11,6 +11,7 @@ import { AuthService } from '../auth.service';
 import { RefreshTokenService } from '../../refresh-token/refresh-token.service';
 import { TokenNotExistsExceptions } from '../exceptions/token-not-exists.exception';
 
+@Injectable()
 export class JWTRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(
     @Inject(CustomersJwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof CustomersJwtConfig>,
@@ -28,8 +29,7 @@ export class JWTRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
       throw new TokenNotExistsExceptions(payload.tokenId)
     }
     await this.refreshTokenService.deleteRefreshSession(payload.tokenId);
-    await this.refreshTokenService.deleteExpiredRefreshTokens();
-
+    
     return this.authService.getUserByEmail(payload.email);
   }
 }

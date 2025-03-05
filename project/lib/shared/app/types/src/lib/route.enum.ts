@@ -1,9 +1,17 @@
 export enum Route {
-  Root = '/',
-  Param = ':id',
+  Authentication = 'sign-in',
+  Check = 'check',
+  Create = 'create',
   Draft = 'draft',
+  NewsFeed = 'news-feed',
+  Param = ':id',
+  Registration = 'sign-up',
+  Refresh = 'refresh',
   Repost = ':id/repost',
+  Root = '/',
   Search = 'search',
-  Newsletter = 'newsletter',
-  Upload = 'upload',
+  Subscribe = ':id/subscribe',
+  Subscribers = ':id/subscribers',
+  Update = ':id/update',
+  Upload = 'upload'
 }

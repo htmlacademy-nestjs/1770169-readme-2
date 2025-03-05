@@ -1,9 +1,0 @@
-{
-  "name": "lib-config-news-feed",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "lib/config/news-feed/src",
-  "projectType": "library",
-  "tags": [],
-  "// targets": "to see all targets run: nx show project lib-config-news-feed --web",
-  "targets": {}
-}
