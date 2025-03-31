@@ -2,7 +2,7 @@ import { Expose, Transform, Type } from 'class-transformer';
 
 import { ApiProperty } from '@nestjs/swagger';
 
-import { PostStatus, PostType, User } from '@project/lib/shared/app/types';
+import { PostStatus, PostType } from '@project/lib/shared/app/types';
 
 import { CreatedPostTagsRDO } from './created-post-tags.rdo';
 import { CreatedLinkPostRDO } from './created-link-post.rdo';
