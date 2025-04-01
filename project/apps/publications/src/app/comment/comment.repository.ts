@@ -1,4 +1,3 @@
-import {Pagination} from './../../../../../lib/shared/app/types/src/lib/pagination.interface';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Prisma } from '@prisma/client';
@@ -6,7 +5,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaClientService } from '@project/lib/publications/models';
 import { createMessage } from '@project/lib/shared/helpers';
 import { BasePostgresRepository } from '@project/lib/core';
-import { Comment } from '@project/lib/shared/app/types';
+import { Comment, Pagination } from '@project/lib/shared/app/types';
 import { CommentsQuery } from '@project/lib/shared/app/query';
 
 import { CommentEntity } from './comment.entity';
